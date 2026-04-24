@@ -225,71 +225,47 @@
         </section>
 
         <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8" id="recipesContainer">
-            
-            <article class="recipe-card bg-white rounded-3xl overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative border border-surface-variant/60 flex flex-col" data-category="Makan Malam" data-title="Salmon Panggang Lemon Asparagus">
-                <button class="absolute top-4 right-4 z-10 bg-white p-2 rounded-full text-secondary hover:text-error transition-colors shadow-md" onclick="toggleBookmark(this)">
-                    <span class="material-symbols-outlined icon-bookmark text-[20px] icon-fill">bookmark</span>
+            @foreach($recipes as $recipe)
+            <article class="recipe-card bg-white rounded-3xl overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative border border-surface-variant/60 flex flex-col" data-category="{{ $recipe['category'] }}" data-title="{{ $recipe['title'] }}" data-id="{{ $recipe['id'] }}">
+                <button class="absolute top-4 right-4 z-10 bg-white p-2 rounded-full text-secondary hover:text-error transition-colors shadow-md bookmark-btn" onclick="toggleBookmark(this, {{ $recipe['id'] }})">
+                    <span class="material-symbols-outlined icon-bookmark text-[20px]">bookmark</span>
                 </button>
                 <div class="relative h-56 overflow-hidden bg-surface-container-low">
-                    <img alt="Salmon Panggang" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-700" src="https://images.unsplash.com/photo-1485921325833-c519f76c4927?q=80&w=600&auto=format&fit=crop"/>
+                    <img alt="{{ $recipe['title'] }}" class="w-full h-full object-cover mix-blend-multiply group-hover:scale-110 transition-transform duration-700" src="{{ $recipe['image'] }}"/>
                 </div>
                 <div class="p-6 flex flex-col flex-1">
                     <div class="flex items-center gap-3 mb-3">
-                        <span class="text-primary font-bold text-[11px] uppercase tracking-wider">Makan Malam</span>
-                        <span class="flex items-center text-[11px] text-on-surface-variant font-medium"><span class="material-symbols-outlined text-[14px] mr-1">schedule</span> 30 mnt</span>
+                        <span class="text-primary font-bold text-[11px] uppercase tracking-wider">{{ $recipe['category'] }}</span>
+                        <span class="flex items-center text-[11px] text-on-surface-variant font-medium"><span class="material-symbols-outlined text-[14px] mr-1">schedule</span> {{ $recipe['time'] }}</span>
                     </div>
-                    <h3 class="text-xl font-bold text-on-surface mb-2 leading-tight">Salmon Panggang Lemon Asparagus</h3>
-                    <p class="text-sm text-on-surface-variant mb-6 line-clamp-2">Sajian sehat dan elegan, sempurna untuk makan malam ringan yang kaya akan omega-3.</p>
+                    <h3 class="text-xl font-bold text-on-surface mb-2 leading-tight">{{ $recipe['title'] }}</h3>
+                    <p class="text-sm text-on-surface-variant mb-6 line-clamp-2">{{ $recipe['description'] }}</p>
                     <div class="flex justify-between items-center mt-auto pt-4 border-t border-surface-variant/50">
-                        <span class="text-xs font-bold text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">local_fire_department</span> Mudah</span>
+                        <span class="text-xs font-bold text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">local_fire_department</span> {{ $recipe['difficulty'] }}</span>
                         <a href="/chat" class="text-primary font-bold text-sm flex items-center hover:text-primary-container transition-colors group/btn">Masak <span class="material-symbols-outlined text-[18px] ml-1 transform group-hover/btn:translate-x-1 transition-transform">arrow_forward</span></a>
                     </div>
                 </div>
             </article>
+            @endforeach
 
-            <article class="recipe-card bg-white rounded-3xl overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative border border-surface-variant/60 flex flex-col" data-category="Sarapan" data-title="Roti Bakar Alpukat Telur Rebus">
-                <button class="absolute top-4 right-4 z-10 bg-white p-2 rounded-full text-secondary hover:text-error transition-colors shadow-md" onclick="toggleBookmark(this)">
-                    <span class="material-symbols-outlined icon-bookmark text-[20px] icon-fill">bookmark</span>
-                </button>
-                <div class="relative h-56 overflow-hidden bg-surface-container-low">
-                    <img alt="Avocado Toast" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://images.unsplash.com/photo-1603048297172-c92544798d5e?q=80&w=600&auto=format&fit=crop"/>
+            <!-- Empty State (Hidden by default) -->
+            <div id="emptyState" class="hidden col-span-1 md:col-span-2 lg:col-span-3 text-center py-20">
+                <div class="w-24 h-24 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-6 text-secondary">
+                    <span class="material-symbols-outlined text-[48px]">search_off</span>
                 </div>
-                <div class="p-6 flex flex-col flex-1">
-                    <div class="flex items-center gap-3 mb-3">
-                        <span class="text-primary font-bold text-[11px] uppercase tracking-wider">Sarapan</span>
-                        <span class="flex items-center text-[11px] text-on-surface-variant font-medium"><span class="material-symbols-outlined text-[14px] mr-1">schedule</span> 15 mnt</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-on-surface mb-2 leading-tight">Roti Bakar Alpukat Telur Rebus</h3>
-                    <p class="text-sm text-on-surface-variant mb-6 line-clamp-2">Awali hari dengan energi positif dari roti gandum utuh dan alpukat segar.</p>
-                    <div class="flex justify-between items-center mt-auto pt-4 border-t border-surface-variant/50">
-                        <span class="text-xs font-bold text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">local_fire_department</span> Mudah</span>
-                        <a href="/chat" class="text-primary font-bold text-sm flex items-center hover:text-primary-container transition-colors group/btn">Masak <span class="material-symbols-outlined text-[18px] ml-1 transform group-hover/btn:translate-x-1 transition-transform">arrow_forward</span></a>
-                    </div>
-                </div>
-            </article>
-
-            <article class="recipe-card bg-white rounded-3xl overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative border border-surface-variant/60 flex flex-col" data-category="Makan Siang" data-title="Sup Daging Rempah Nusantara">
-                <button class="absolute top-4 right-4 z-10 bg-white p-2 rounded-full text-primary hover:text-error transition-colors shadow-md" onclick="toggleBookmark(this)">
-                    <span class="material-symbols-outlined icon-bookmark text-[20px] icon-fill">bookmark</span>
-                </button>
-                <div class="relative h-56 overflow-hidden bg-surface-container-low">
-                    <img alt="Sup Daging" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://images.unsplash.com/photo-1582878826629-29b7ad1cb431?q=80&w=600&auto=format&fit=crop"/>
-                </div>
-                <div class="p-6 flex flex-col flex-1">
-                    <div class="flex items-center gap-3 mb-3">
-                        <span class="text-primary font-bold text-[11px] uppercase tracking-wider">Makan Siang</span>
-                        <span class="flex items-center text-[11px] text-on-surface-variant font-medium"><span class="material-symbols-outlined text-[14px] mr-1">schedule</span> 120 mnt</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-on-surface mb-2 leading-tight">Sup Daging Rempah Nusantara</h3>
-                    <p class="text-sm text-on-surface-variant mb-6 line-clamp-2">Kuah kaldu yang dimasak perlahan dengan perpaduan rempah khas Indonesia yang menghangatkan.</p>
-                    <div class="flex justify-between items-center mt-auto pt-4 border-t border-surface-variant/50">
-                        <span class="text-xs font-bold text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">local_fire_department</span> Menengah</span>
-                        <a href="/chat" class="text-primary font-bold text-sm flex items-center hover:text-primary-container transition-colors group/btn">Masak <span class="material-symbols-outlined text-[18px] ml-1 transform group-hover/btn:translate-x-1 transition-transform">arrow_forward</span></a>
-                    </div>
-                </div>
-            </article>
-
+                <h3 class="text-2xl font-bold text-on-surface mb-2">Yah, resep tidak ditemukan</h3>
+                <p class="text-on-surface-variant max-w-md mx-auto">Coba cari dengan kata kunci lain atau ubah filter kategori masakan di atas.</p>
+                <button onclick="document.getElementById('searchInput').value=''; filterRecipes();" class="mt-6 bg-primary text-white font-bold py-3 px-8 rounded-full hover:bg-primary-container transition-colors">Lihat Semua Resep</button>
+            </div>
         </section>
+
+        <!-- Load More Button -->
+        <div class="flex justify-center mb-16" id="loadMoreContainer">
+            <button class="bg-surface-container-lowest border border-outline-variant/30 text-primary font-bold text-sm px-8 py-3.5 rounded-full hover:bg-surface-container-low transition-colors shadow-sm flex items-center gap-2 group">
+                <span class="material-symbols-outlined transform group-hover:rotate-180 transition-transform duration-500">autorenew</span>
+                Tampilkan Lebih Banyak
+            </button>
+        </div>
     </main>
 
     </div>
@@ -323,6 +299,9 @@
         function filterRecipes() {
             const searchQuery = document.getElementById('searchInput').value.toLowerCase();
             const recipes = document.querySelectorAll('.recipe-card');
+            const emptyState = document.getElementById('emptyState');
+            const loadMore = document.getElementById('loadMoreContainer');
+            let visibleCount = 0;
 
             recipes.forEach(recipe => {
                 const title = recipe.getAttribute('data-title').toLowerCase();
@@ -333,10 +312,20 @@
 
                 if (matchesSearch && matchesCategory) {
                     recipe.style.display = 'flex';
+                    visibleCount++;
                 } else {
                     recipe.style.display = 'none';
                 }
             });
+
+            // Handle Empty State
+            if (visibleCount === 0) {
+                emptyState.classList.remove('hidden');
+                loadMore.classList.add('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                loadMore.classList.remove('hidden');
+            }
         }
 
         function setCategory(category, buttonElement) {
@@ -353,17 +342,47 @@
             filterRecipes();
         }
 
-        // Interaktivitas Bookmark Sederhana
-        function toggleBookmark(btn) {
+        // Bookmark Persist Logic with LocalStorage
+        function initBookmarks() {
+            const savedBookmarks = JSON.parse(localStorage.getItem('chefBookmarks')) || [];
+            
+            document.querySelectorAll('.recipe-card').forEach(card => {
+                const id = parseInt(card.getAttribute('data-id'));
+                const icon = card.querySelector('.icon-bookmark');
+                
+                if (savedBookmarks.includes(id)) {
+                    icon.classList.remove('text-secondary');
+                    icon.classList.add('text-primary', 'icon-fill');
+                } else {
+                    icon.classList.remove('text-primary', 'icon-fill');
+                    icon.classList.add('text-secondary');
+                }
+            });
+        }
+
+        function toggleBookmark(btn, id) {
             const icon = btn.querySelector('.icon-bookmark');
-            if (icon.classList.contains('text-primary') || icon.classList.contains('text-error')) {
-                icon.classList.remove('text-primary', 'text-error', 'icon-fill');
+            let savedBookmarks = JSON.parse(localStorage.getItem('chefBookmarks')) || [];
+            
+            if (savedBookmarks.includes(id)) {
+                // Remove bookmark
+                savedBookmarks = savedBookmarks.filter(bId => bId !== id);
+                icon.classList.remove('text-primary', 'icon-fill');
                 icon.classList.add('text-secondary');
             } else {
+                // Add bookmark
+                savedBookmarks.push(id);
                 icon.classList.remove('text-secondary');
                 icon.classList.add('text-primary', 'icon-fill');
             }
+            
+            localStorage.setItem('chefBookmarks', JSON.stringify(savedBookmarks));
         }
+
+        // Initialize things on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initBookmarks();
+        });
         // Logout Modal Functions
         function openLogoutModal(e) {
             e.preventDefault();
