@@ -45,6 +45,22 @@
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .glass-nav { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
     </style>
+        <script>
+        if (sessionStorage.getItem('sidebarHovered') === 'true') {
+            document.write(`
+            <style id="force-hover-style">
+                @media (min-width: 768px) {
+                    #sidebar { width: 16rem !important; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important; }
+                    #sidebar .md\\:opacity-0 { opacity: 1 !important; }
+                    #sidebar .md\\:w-0 { width: auto !important; }
+                    #sidebar .md\\:px-0 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+                    #sidebar .md\\:px-3 { padding-left: 1rem !important; padding-right: 1rem !important; }
+                    #sidebar img.md\\:w-10 { width: 4rem !important; height: 4rem !important; }
+                }
+            </style>
+            `);
+        }
+    </script>
 </head>
 <body class="font-body text-on-surface antialiased pb-24 md:pb-0 flex flex-col md:flex-row min-h-screen">
 
@@ -55,81 +71,102 @@
 
     <!-- Sidebar -->
     <aside id="sidebar"
-        class="h-screen w-64 fixed left-0 top-0 border-r border-surface-variant bg-surface/95 backdrop-blur-xl flex flex-col p-6 space-y-8 z-[60] transform -translate-x-full transition-transform duration-300 ease-in-out shadow-2xl">
+        class="group/sidebar h-screen fixed left-0 top-0 border-r border-surface-variant bg-surface/95 backdrop-blur-xl flex flex-col z-[60] transition-all duration-300 ease-in-out shadow-2xl md:shadow-none hover:md:shadow-2xl
+        w-64 -translate-x-full md:translate-x-0 md:w-20 hover:md:w-64 overflow-x-hidden overflow-y-auto custom-scrollbar py-6">
 
         <button onclick="toggleSidebar()"
             class="md:hidden absolute top-4 right-4 text-on-surface-variant hover:bg-surface-variant p-2 rounded-full transition-colors">
             <span class="material-symbols-outlined">close</span>
         </button>
 
-        <div class="flex flex-col items-center gap-4 pt-4">
-            <div class="relative group cursor-pointer">
-                <div
-                    class="absolute inset-0 bg-primary/20 rounded-full scale-110 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md">
-                </div>
-                <img alt="Chef logo"
-                    class="w-20 h-20 rounded-full object-cover organic-shadow relative z-10 border-2 border-white"
-                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=ChefJuna&backgroundColor=fbf9f0" />
+        <div class="flex flex-col items-center pt-2 px-6 md:px-0 group-hover/sidebar:px-6 transition-all duration-300">
+            <div class="relative cursor-pointer shrink-0 flex justify-center w-full">
+                <a href="/settings" class="block">
+                    <img alt="Chef logo"
+                        class="w-16 h-16 md:w-10 md:h-10 group-hover/sidebar:w-16 group-hover/sidebar:h-16 rounded-full object-cover organic-shadow relative z-10 border-2 border-white transition-all duration-300"
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=ChefJuna&backgroundColor=fbf9f0" />
+                </a>
             </div>
-            <div class="text-center">
+            <div class="text-center mt-3 opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300 whitespace-nowrap">
                 <h2 class="text-lg font-black text-primary font-headline tracking-tight">The Atelier</h2>
-                <p class="text-xs font-medium text-secondary tracking-widest uppercase">Chef Simulator</p>
+                <p class="text-[10px] font-bold text-secondary tracking-widest uppercase">Chef Simulator</p>
             </div>
         </div>
 
-        <button
-            class="w-full bg-gradient-to-r from-primary to-primary-container text-white rounded-xl py-3 px-4 font-bold text-sm organic-shadow hover:shadow-lg hover:shadow-primary/30 active:scale-95 transition-all duration-200 flex justify-center items-center gap-2">
-            <span class="material-symbols-outlined text-[18px]">add_circle</span> Create Recipe
-        </button>
+        <div class="px-6 md:px-3 group-hover/sidebar:px-6 transition-all duration-300 w-full mt-6 shrink-0">
+            <button
+                class="w-full bg-gradient-to-r from-primary to-primary-container text-white rounded-xl py-3 md:py-3 px-4 md:px-0 group-hover/sidebar:px-4 font-bold text-sm organic-shadow hover:shadow-lg hover:shadow-primary/30 active:scale-95 transition-all duration-200 flex justify-center items-center overflow-hidden">
+                <span class="material-symbols-outlined text-[20px] shrink-0">add_circle</span> 
+                <span class="whitespace-nowrap font-bold opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300 w-auto md:w-0 group-hover/sidebar:w-auto overflow-hidden pl-2">Create Recipe</span>
+            </button>
+        </div>
 
-        <nav class="flex-1 space-y-2 font-medium">
-            <a class="flex items-center gap-3 text-secondary hover:bg-surface-container-high rounded-xl px-4 py-3 transition-colors duration-200"
-                href="/dashboard">
-                <span class="material-symbols-outlined">grid_view</span> Home
+        <nav class="flex-1 space-y-1.5 font-medium px-4 md:px-3 group-hover/sidebar:px-4 transition-all duration-300 mt-6 shrink-0">
+            <a href="/dashboard" class="flex items-center text-secondary hover:bg-surface-container-high rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined">grid_view</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-medium opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Home</span>
             </a>
-            <a class="flex items-center gap-3 bg-primary text-white rounded-xl px-4 py-3 shadow-md shadow-primary/20 transition-all"
-                href="/explore">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant_menu</span> Recipes
+            <a href="/explore" class="flex items-center bg-primary text-white shadow-md shadow-primary/20 hover:bg-primary rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant_menu</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-medium opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Recipes</span>
             </a>
-            <a class="flex items-center gap-3 text-secondary hover:bg-surface-container-high rounded-xl px-4 py-3 transition-colors duration-200"
-                href="/pantry">
-                <span class="material-symbols-outlined">inventory_2</span> Pantry
+            <a href="/pantry" class="flex items-center text-secondary hover:bg-surface-container-high rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-medium opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Pantry</span>
             </a>
-            <a class="flex items-center gap-3 text-secondary hover:bg-surface-container-high rounded-xl px-4 py-3 transition-colors duration-200"
-                href="/community">
-                <span class="material-symbols-outlined">groups</span> Community
+            <a href="/community" class="flex items-center text-secondary hover:bg-surface-container-high rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined">groups</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-medium opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Community</span>
             </a>
-            <a class="flex items-center gap-3 text-secondary hover:bg-surface-container-high rounded-xl px-4 py-3 transition-colors duration-200"
-                href="#">
-                <span class="material-symbols-outlined">bookmark</span> Bookmark
+            <a href="/bookmarks" class="flex items-center text-secondary hover:bg-surface-container-high rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined">bookmark</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-medium opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Bookmarks</span>
             </a>
-            <a class="flex items-center gap-3 text-secondary hover:bg-surface-container-high rounded-xl px-4 py-3 transition-colors duration-200"
-                href="#">
-                <span class="material-symbols-outlined">history</span> History
+            <a href="/history" class="flex items-center text-secondary hover:bg-surface-container-high rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined">history</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-medium opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">History</span>
             </a>
         </nav>
 
-        <div class="mt-auto space-y-2 font-medium border-t border-surface-variant pt-4">
-            <a class="flex items-center gap-3 text-secondary hover:bg-surface-container-high rounded-xl px-4 py-3 transition-colors duration-200"
-                href="/settings">
-                <span class="material-symbols-outlined">settings</span> Settings
+        <div class="mt-4 space-y-1.5 font-medium border-t border-surface-variant pt-4 px-4 md:px-3 group-hover/sidebar:px-4 transition-all duration-300 shrink-0">
+            <a href="/settings" class="flex items-center text-secondary hover:bg-surface-container-high rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined">settings</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-medium opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Settings</span>
             </a>
-            <a class="flex items-center gap-3 text-secondary hover:bg-surface-container-high rounded-xl px-4 py-3 transition-colors duration-200"
-                href="#">
-                <span class="material-symbols-outlined">help_outline</span> Support
+            <a href="#" class="flex items-center text-secondary hover:bg-surface-container-high rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined">help_outline</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-medium opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Support</span>
             </a>
-            <a class="flex items-center gap-3 text-error hover:bg-error-container hover:text-error rounded-xl px-4 py-3 transition-colors duration-200"
-                href="#" onclick="openLogoutModal(event)">
-                <span class="material-symbols-outlined">logout</span> Log Out
+            <a href="#" onclick="openLogoutModal(event)" class="flex items-center text-error hover:bg-error-container hover:text-error rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined">logout</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-bold opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Log Out</span>
             </a>
         </div>
     </aside>
 
-    <div id="main-content" class="flex-1 flex flex-col relative transition-all duration-300 w-full">
+    <div id="main-content" class="md:ml-20 flex-1 flex flex-col relative transition-all duration-300 w-full">
 
     <nav class="sticky top-0 w-full z-40 flex justify-between items-center px-6 py-4 bg-[#fbf9f0]/80 glass-nav border-b border-surface-variant/50 transition-colors">
         <div class="flex items-center gap-4">
-            <button onclick="toggleSidebar()" class="text-primary hover:bg-surface-container-high p-2 rounded-full transition-colors duration-200 flex">
+            <button onclick="toggleSidebar()" class="text-primary hover:bg-surface-container-high p-2 rounded-full transition-colors duration-200 flex md:hidden">
                 <span class="material-symbols-outlined">menu</span>
             </button>
             <a class="text-xl font-bold italic text-primary tracking-tight hidden md:block" href="/dashboard">Chef Simulator</a>
@@ -238,9 +275,13 @@
                         <span class="text-primary font-bold text-[11px] uppercase tracking-wider">{{ $recipe['category'] }}</span>
                         <span class="flex items-center text-[11px] text-on-surface-variant font-medium"><span class="material-symbols-outlined text-[14px] mr-1">schedule</span> {{ $recipe['time'] }}</span>
                     </div>
-                    <h3 class="text-xl font-bold text-on-surface mb-2 leading-tight">{{ $recipe['title'] }}</h3>
-                    <p class="text-sm text-on-surface-variant mb-6 line-clamp-2">{{ $recipe['description'] }}</p>
-                    <div class="flex justify-between items-center mt-auto pt-4 border-t border-surface-variant/50">
+                    <h3 class="text-xl font-bold text-on-surface mb-2 leading-tight">
+                        <a href="{{ route('recipe.detail', ['slug' => $recipe['slug']]) }}" class="hover:text-primary transition-colors before:absolute before:inset-0">
+                            {{ $recipe['title'] }}
+                        </a>
+                    </h3>
+                    <p class="text-sm text-on-surface-variant mb-6 line-clamp-2 relative z-10">{{ $recipe['description'] }}</p>
+                    <div class="flex justify-between items-center mt-auto pt-4 border-t border-surface-variant/50 relative z-10">
                         <span class="text-xs font-bold text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">local_fire_department</span> {{ $recipe['difficulty'] }}</span>
                         <a href="/chat" class="text-primary font-bold text-sm flex items-center hover:text-primary-container transition-colors group/btn">Masak <span class="material-symbols-outlined text-[18px] ml-1 transform group-hover/btn:translate-x-1 transition-transform">arrow_forward</span></a>
                     </div>
@@ -271,23 +312,16 @@
     </div>
 
     <script>
-        // Toggle Sidebar
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebar-overlay');
-
             if (sidebar.classList.contains('-translate-x-full')) {
-                // Buka Sidebar
                 overlay.classList.remove('hidden');
-                // Gunakan requestAnimationFrame untuk memastikan display block di-render sebelum transisi
                 requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        sidebar.classList.remove('-translate-x-full');
-                        overlay.classList.remove('opacity-0');
-                    });
+                    sidebar.classList.remove('-translate-x-full');
+                    overlay.classList.remove('opacity-0');
                 });
             } else {
-                // Tutup Sidebar
                 sidebar.classList.add('-translate-x-full');
                 overlay.classList.add('opacity-0');
                 setTimeout(() => overlay.classList.add('hidden'), 300);
@@ -306,7 +340,6 @@
             recipes.forEach(recipe => {
                 const title = recipe.getAttribute('data-title').toLowerCase();
                 const category = recipe.getAttribute('data-category');
-                
                 const matchesSearch = title.includes(searchQuery);
                 const matchesCategory = currentCategory === 'Semua' || category === currentCategory;
 
@@ -318,7 +351,6 @@
                 }
             });
 
-            // Handle Empty State
             if (visibleCount === 0) {
                 emptyState.classList.remove('hidden');
                 loadMore.classList.add('hidden');
@@ -330,26 +362,19 @@
 
         function setCategory(category, buttonElement) {
             currentCategory = category;
-            
-            // Update button styles
             const buttons = document.querySelectorAll('.category-btn');
             buttons.forEach(btn => {
                 btn.className = btn.getAttribute('data-default-class') + ' category-btn';
             });
-            
             buttonElement.className = buttonElement.getAttribute('data-active-class') + ' category-btn active';
-            
             filterRecipes();
         }
 
-        // Bookmark Persist Logic with LocalStorage
         function initBookmarks() {
             const savedBookmarks = JSON.parse(localStorage.getItem('chefBookmarks')) || [];
-            
             document.querySelectorAll('.recipe-card').forEach(card => {
                 const id = parseInt(card.getAttribute('data-id'));
                 const icon = card.querySelector('.icon-bookmark');
-                
                 if (savedBookmarks.includes(id)) {
                     icon.classList.remove('text-secondary');
                     icon.classList.add('text-primary', 'icon-fill');
@@ -363,32 +388,27 @@
         function toggleBookmark(btn, id) {
             const icon = btn.querySelector('.icon-bookmark');
             let savedBookmarks = JSON.parse(localStorage.getItem('chefBookmarks')) || [];
-            
             if (savedBookmarks.includes(id)) {
-                // Remove bookmark
                 savedBookmarks = savedBookmarks.filter(bId => bId !== id);
                 icon.classList.remove('text-primary', 'icon-fill');
                 icon.classList.add('text-secondary');
             } else {
-                // Add bookmark
                 savedBookmarks.push(id);
                 icon.classList.remove('text-secondary');
                 icon.classList.add('text-primary', 'icon-fill');
             }
-            
             localStorage.setItem('chefBookmarks', JSON.stringify(savedBookmarks));
         }
 
-        // Initialize things on load
         document.addEventListener('DOMContentLoaded', () => {
             initBookmarks();
         });
+
         // Logout Modal Functions
         function openLogoutModal(e) {
             e.preventDefault();
             const modal = document.getElementById('logout-modal');
             const content = document.getElementById('logout-modal-content');
-            
             modal.classList.remove('hidden');
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
@@ -402,23 +422,17 @@
         function closeLogoutModal() {
             const modal = document.getElementById('logout-modal');
             const content = document.getElementById('logout-modal-content');
-            
             modal.classList.add('opacity-0');
             content.classList.remove('scale-100');
             content.classList.add('scale-95');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
         }
 
         // Notification Logic
         function toggleNotifications() {
             const panel = document.getElementById('notif-panel');
             const badge = document.getElementById('notif-badge');
-            
             if (panel.classList.contains('hidden')) {
-                // Open panel
                 panel.classList.remove('hidden');
                 requestAnimationFrame(() => {
                     requestAnimationFrame(() => {
@@ -426,18 +440,14 @@
                         panel.classList.add('opacity-100', 'scale-100');
                     });
                 });
-                
-                // Hide badge red dot as it's viewed
                 if(badge) badge.classList.add('hidden');
             } else {
-                // Close panel
                 panel.classList.remove('opacity-100', 'scale-100');
                 panel.classList.add('opacity-0', 'scale-95');
                 setTimeout(() => panel.classList.add('hidden'), 200);
             }
         }
 
-        // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             const panel = document.getElementById('notif-panel');
             const btn = document.getElementById('notif-btn');
@@ -453,37 +463,37 @@
 
     <!-- Logout Modal Container -->
     <div id="logout-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden opacity-0 transition-all duration-300 ease-in-out">
-        <!-- Blurred Background -->
         <div class="absolute inset-0 bg-surface/80 backdrop-blur-md" onclick="closeLogoutModal()"></div>
-        
-        <!-- The Modal -->
         <div class="bg-surface-container-lowest w-full max-w-md rounded-2xl shadow-ambient p-8 relative overflow-hidden flex flex-col items-center text-center transform scale-95 transition-transform duration-300 z-10" id="logout-modal-content">
-            <!-- Decorative Icon -->
             <div class="mb-6 h-16 w-16 bg-surface-container-low rounded-full flex items-center justify-center text-primary">
-                <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">
-                    door_open
-                </span>
+                <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">door_open</span>
             </div>
-            <!-- Typography -->
-            <h2 class="font-headline text-2xl font-bold text-primary mb-3 tracking-tight">
-                Yakin ingin keluar, Chef?
-            </h2>
-            <p class="font-body text-on-surface-variant text-base mb-8 leading-relaxed max-w-[280px]">
-                Pastikan resepmu sudah tersimpan rapi sebelum meninggalkan dapur.
-            </p>
-            <!-- Actions -->
+            <h2 class="font-headline text-2xl font-bold text-primary mb-3 tracking-tight">Yakin ingin keluar, Chef?</h2>
+            <p class="font-body text-on-surface-variant text-base mb-8 leading-relaxed max-w-[280px]">Pastikan resepmu sudah tersimpan rapi sebelum meninggalkan dapur.</p>
             <div class="w-full flex flex-col sm:flex-row gap-4">
-                <button onclick="closeLogoutModal()" class="flex-1 py-3 px-6 rounded-lg border border-outline-variant/30 text-primary font-label font-bold hover:bg-surface-container-low transition-colors duration-200">
-                    Batal
-                </button>
+                <button onclick="closeLogoutModal()" class="flex-1 py-3 px-6 rounded-xl border border-outline-variant/30 text-primary font-label font-bold hover:bg-surface-container-low transition-colors duration-200">Batal</button>
                 <form method="POST" action="/logout" class="flex-1 flex">
                     @csrf
-                    <button type="submit" class="w-full py-3 px-6 rounded-lg bg-gradient-to-r from-primary to-primary-container text-white font-label font-bold hover:opacity-90 transition-opacity duration-200 shadow-sm">
-                        Iya, Keluar
-                    </button>
+                    <button type="submit" class="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-primary to-primary-container text-white font-label font-bold hover:opacity-90 transition-opacity duration-200 shadow-sm">Iya, Keluar</button>
                 </form>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const forceStyle = document.getElementById('force-hover-style');
+            if (sidebar) {
+                sidebar.addEventListener('mouseenter', () => {
+                    sessionStorage.setItem('sidebarHovered', 'true');
+                });
+                sidebar.addEventListener('mouseleave', () => {
+                    sessionStorage.setItem('sidebarHovered', 'false');
+                    if (forceStyle) { forceStyle.remove(); }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

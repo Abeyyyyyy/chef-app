@@ -86,6 +86,22 @@
             animation: fadeOut 0.3s ease-in forwards;
         }
     </style>
+        <script>
+        if (sessionStorage.getItem('sidebarHovered') === 'true') {
+            document.write(`
+            <style id="force-hover-style">
+                @media (min-width: 768px) {
+                    #sidebar { width: 16rem !important; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important; }
+                    #sidebar .md\\:opacity-0 { opacity: 1 !important; }
+                    #sidebar .md\\:w-0 { width: auto !important; }
+                    #sidebar .md\\:px-0 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+                    #sidebar .md\\:px-3 { padding-left: 1rem !important; padding-right: 1rem !important; }
+                    #sidebar img.md\\:w-10 { width: 4rem !important; height: 4rem !important; }
+                }
+            </style>
+            `);
+        }
+    </script>
 </head>
 
 <body class="flex h-screen overflow-hidden text-sm md:text-base">
@@ -97,91 +113,112 @@
         onclick="toggleSidebar()"></div>
 
     <aside id="sidebar"
-        class="h-screen w-64 fixed left-0 top-0 border-r border-surface-variant bg-surface/95 backdrop-blur-xl flex flex-col p-6 space-y-8 z-40 transform -translate-x-full transition-transform duration-300 ease-in-out shadow-2xl">
+        class="group/sidebar h-screen fixed left-0 top-0 border-r border-surface-variant bg-surface/95 backdrop-blur-xl flex flex-col z-[60] transition-all duration-300 ease-in-out shadow-2xl md:shadow-none hover:md:shadow-2xl
+        w-64 -translate-x-full md:translate-x-0 md:w-20 hover:md:w-64 overflow-x-hidden overflow-y-auto custom-scrollbar py-6">
 
         <button onclick="toggleSidebar()"
             class="md:hidden absolute top-4 right-4 text-on-surface-variant hover:bg-surface-variant p-2 rounded-full transition-colors">
             <span class="material-symbols-outlined">close</span>
         </button>
 
-        <div class="flex flex-col items-center gap-4 pt-4">
-            <div class="relative group cursor-pointer">
-                <div
-                    class="absolute inset-0 bg-primary/20 rounded-full scale-110 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md">
-                </div>
-                <img alt="Chef logo"
-                    class="w-20 h-20 rounded-full object-cover organic-shadow relative z-10 border-2 border-white"
-                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=ChefJuna&backgroundColor=fbf9f0" />
+        <div class="flex flex-col items-center pt-2 px-6 md:px-0 group-hover/sidebar:px-6 transition-all duration-300">
+            <div class="relative cursor-pointer shrink-0 flex justify-center w-full">
+                <a href="/settings" class="block">
+                    <img alt="Chef logo"
+                        class="w-16 h-16 md:w-10 md:h-10 group-hover/sidebar:w-16 group-hover/sidebar:h-16 rounded-full object-cover organic-shadow relative z-10 border-2 border-white transition-all duration-300"
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=ChefJuna&backgroundColor=fbf9f0" />
+                </a>
             </div>
-            <div class="text-center">
+            <div class="text-center mt-3 opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300 whitespace-nowrap">
                 <h2 class="text-lg font-black text-primary font-headline tracking-tight">The Atelier</h2>
-                <p class="text-xs font-medium text-secondary tracking-widest uppercase">Chef Simulator</p>
+                <p class="text-[10px] font-bold text-secondary tracking-widest uppercase">Chef Simulator</p>
             </div>
         </div>
 
-        <button onclick="showToast('Membuka kanvas resep baru...', 'success')"
-            class="w-full bg-gradient-to-r from-primary to-primary-container text-white rounded-xl py-3 px-4 font-bold text-sm organic-shadow hover:shadow-lg hover:shadow-primary/30 active:scale-95 transition-all duration-200 flex justify-center items-center gap-2">
-            <span class="material-symbols-outlined text-[18px]">add_circle</span> Create Recipe
-        </button>
+        <div class="px-6 md:px-3 group-hover/sidebar:px-6 transition-all duration-300 w-full mt-6 shrink-0">
+            <button
+                class="w-full bg-gradient-to-r from-primary to-primary-container text-white rounded-xl py-3 md:py-3 px-4 md:px-0 group-hover/sidebar:px-4 font-bold text-sm organic-shadow hover:shadow-lg hover:shadow-primary/30 active:scale-95 transition-all duration-200 flex justify-center items-center overflow-hidden">
+                <span class="material-symbols-outlined text-[20px] shrink-0">add_circle</span> 
+                <span class="whitespace-nowrap font-bold opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300 w-auto md:w-0 group-hover/sidebar:w-auto overflow-hidden pl-2">Create Recipe</span>
+            </button>
+        </div>
 
-        <nav class="flex-1 space-y-2 font-medium">
-            <a class="flex items-center gap-3 bg-primary text-white rounded-xl px-4 py-3 shadow-md shadow-primary/20 transition-all"
-                href="/dashboard">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span> Home
+        <nav class="flex-1 space-y-1.5 font-medium px-4 md:px-3 group-hover/sidebar:px-4 transition-all duration-300 mt-6 shrink-0">
+            <a href="/dashboard" class="flex items-center bg-primary text-white shadow-md shadow-primary/20 hover:bg-primary rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-medium opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Home</span>
             </a>
-            <a class="flex items-center gap-3 text-secondary hover:bg-surface-container-high rounded-xl px-4 py-3 transition-colors duration-200"
-                href="/explore">
-                <span class="material-symbols-outlined">restaurant_menu</span> Recipes
+            <a href="/explore" class="flex items-center text-secondary hover:bg-surface-container-high rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined">restaurant_menu</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-medium opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Recipes</span>
             </a>
-            <a class="flex items-center gap-3 text-secondary hover:bg-surface-container-high rounded-xl px-4 py-3 transition-colors duration-200"
-                href="/pantry">
-                <span class="material-symbols-outlined">inventory_2</span> Pantry
+            <a href="/pantry" class="flex items-center text-secondary hover:bg-surface-container-high rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-medium opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Pantry</span>
             </a>
-            <a class="flex items-center gap-3 text-secondary hover:bg-surface-container-high rounded-xl px-4 py-3 transition-colors duration-200"
-                href="/community">
-                <span class="material-symbols-outlined">groups</span> Community
+            <a href="/community" class="flex items-center text-secondary hover:bg-surface-container-high rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined">groups</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-medium opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Community</span>
             </a>
-            <a class="flex items-center gap-3 text-secondary hover:bg-surface-container-high rounded-xl px-4 py-3 transition-colors duration-200"
-                href="#">
-                <span class="material-symbols-outlined">bookmark</span> Bookmark
+            <a href="/bookmarks" class="flex items-center text-secondary hover:bg-surface-container-high rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined">bookmark</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-medium opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Bookmarks</span>
             </a>
-            <a class="flex items-center gap-3 text-secondary hover:bg-surface-container-high rounded-xl px-4 py-3 transition-colors duration-200"
-                href="#">
-                <span class="material-symbols-outlined">history</span> History
+            <a href="/history" class="flex items-center text-secondary hover:bg-surface-container-high rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined">history</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-medium opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">History</span>
             </a>
         </nav>
 
-        <div class="mt-auto space-y-2 font-medium border-t border-surface-variant pt-4">
-            <a class="flex items-center gap-3 text-secondary hover:bg-surface-container-high rounded-xl px-4 py-3 transition-colors duration-200"
-                href="/settings">
-                <span class="material-symbols-outlined">settings</span> Settings
+        <div class="mt-4 space-y-1.5 font-medium border-t border-surface-variant pt-4 px-4 md:px-3 group-hover/sidebar:px-4 transition-all duration-300 shrink-0">
+            <a href="/settings" class="flex items-center text-secondary hover:bg-surface-container-high rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined">settings</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-medium opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Settings</span>
             </a>
-            <a class="flex items-center gap-3 text-secondary hover:bg-surface-container-high rounded-xl px-4 py-3 transition-colors duration-200"
-                href="#">
-                <span class="material-symbols-outlined">help_outline</span> Support
+            <a href="#" class="flex items-center text-secondary hover:bg-surface-container-high rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined">help_outline</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-medium opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Support</span>
             </a>
-            <a class="flex items-center gap-3 text-error hover:bg-error-container hover:text-error rounded-xl px-4 py-3 transition-colors duration-200"
-                href="#" onclick="openLogoutModal(event)">
-                <span class="material-symbols-outlined">logout</span> Log Out
+            <a href="#" onclick="openLogoutModal(event)" class="flex items-center text-error hover:bg-error-container hover:text-error rounded-xl overflow-hidden transition-colors">
+                <div class="w-14 h-12 shrink-0 flex items-center justify-center">
+                    <span class="material-symbols-outlined">logout</span>
+                </div>
+                <span class="whitespace-nowrap pr-4 font-bold opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300">Log Out</span>
             </a>
         </div>
     </aside>
 
-    <div id="main-content" class="flex-1 flex flex-col relative overflow-hidden transition-all duration-300 w-full">
+    <div id="main-content" class="md:ml-20 flex-1 flex flex-col relative overflow-hidden transition-all duration-300 w-full">
 
         <header
             class="sticky top-0 w-full flex items-center justify-between px-6 md:px-8 py-4 bg-surface/80 backdrop-blur-md border-b border-surface-variant z-20">
             <div class="flex items-center gap-4 md:gap-8">
                 <button onclick="toggleSidebar()"
-                    class="text-primary p-2 hover:bg-surface-variant rounded-full transition-colors flex">
+                    class="text-primary p-2 hover:bg-surface-variant rounded-full transition-colors flex md:hidden">
                     <span class="material-symbols-outlined">menu</span>
                 </button>
                 <h1 class="text-xl md:text-2xl font-bold tracking-tighter text-primary md:hidden">The Atelier</h1>
 
                 <nav class="hidden md:flex gap-6 text-sm font-bold">
-                    <a class="text-primary border-b-2 border-primary pb-1" href="#">Browse</a>
-                    <a class="text-outline-variant hover:text-primary transition-colors pb-1" href="#">Pro Features</a>
-                    <a class="text-outline-variant hover:text-primary transition-colors pb-1" href="#">Journal</a>
+                    <a class="text-primary border-b-2 border-primary pb-1" href="/explore">Browse</a>
+                    <a class="text-outline-variant hover:text-primary transition-colors pb-1" href="/pantry">Pro Features</a>
+                    <a class="text-outline-variant hover:text-primary transition-colors pb-1" href="/history">Journal</a>
                 </nav>
             </div>
 
@@ -251,253 +288,250 @@
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-4 md:p-8 pb-24 space-y-8 scroll-smooth">
+        <main class="flex-1 overflow-y-auto p-4 md:p-8 pb-24 space-y-8 scroll-smooth custom-scrollbar">
 
-            <section
-                class="relative bg-surface-container-low rounded-3xl overflow-hidden p-6 md:p-12 organic-shadow flex flex-col md:flex-row items-center justify-between gap-8 group border border-white">
-                <div class="z-10 max-w-xl text-center md:text-left">
-                    <h2
-                        class="text-3xl md:text-5xl font-display font-bold tracking-tight text-on-surface mb-4 leading-tight">
-                        Selamat Datang,<br /><span class="text-primary">Chef Abey!</span></h2>
-                    <p class="text-base md:text-lg text-secondary mb-8 font-medium">Dapur sudah disiapkan dan
-                        bahan-bahan telah menunggu. Mahakarya kuliner apa yang akan kamu ciptakan hari ini?</p>
-                    <a href="/chat"
-                        class="bg-primary text-white px-6 md:px-8 py-3 md:py-4 rounded-2xl font-bold text-base md:text-lg inline-flex items-center gap-3 organic-shadow hover:bg-primary-container active:scale-95 transition-all duration-300 w-max">
-                        Mulai Simulasi Baru
-                        <span class="material-symbols-outlined animate-bounce"
-                            style="font-variation-settings: 'FILL' 1;">skillet</span>
-                    </a>
-                </div>
-                <div
-                    class="w-full md:w-5/12 aspect-video md:aspect-[4/3] relative rounded-2xl overflow-hidden shadow-2xl">
-                    <img alt="Kitchen prep area"
-                        class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000 ease-out"
-                        src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=1000&auto=format&fit=crop" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                </div>
-            </section>
-
+            <!-- Top Row: Hero & Stats -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-
-                <section
-                    class="lg:col-span-1 bg-white rounded-3xl p-6 md:p-8 organic-shadow flex flex-col justify-between border border-surface-variant/50 hover:border-primary/30 transition-colors">
-                    <div>
-                        <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-xl font-bold text-on-surface">Pantry Status</h3>
-                            <div class="p-2 bg-surface-container-low rounded-xl">
-                                <span class="material-symbols-outlined text-secondary">inventory</span>
-                            </div>
+                
+                <!-- Hero Banner (Col 1-2) -->
+                <section class="lg:col-span-2 relative bg-surface-container-low rounded-3xl overflow-hidden p-6 md:p-10 organic-shadow flex flex-col justify-center border border-white group">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+                    <div class="absolute bottom-0 left-0 w-48 h-48 bg-secondary-container/30 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px]">wb_sunny</span> Pagi yang Indah
+                            </span>
                         </div>
-                        <div class="space-y-4">
-                            <div
-                                class="bg-error-container/40 rounded-2xl p-5 border border-error-container/50 transform hover:-translate-y-1 transition-transform cursor-default">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
-                                    <p class="text-xs font-bold text-error uppercase tracking-wider">Stok Menipis</p>
-                                </div>
-                                <p class="text-lg font-bold text-on-surface">Telur, Susu Sapi</p>
-                            </div>
-                            <div
-                                class="bg-surface-container-low rounded-2xl p-5 transform hover:-translate-y-1 transition-transform cursor-default">
-                                <p class="text-xs font-bold text-secondary uppercase tracking-wider mb-1">Resep
-                                    Tersimpan</p>
-                                <div class="flex items-end gap-2">
-                                    <p class="text-4xl font-black text-primary leading-none">12</p>
-                                    <p class="text-sm font-medium text-secondary pb-1">resep</p>
-                                </div>
-                            </div>
-                        </div>
+                        <h2 class="text-3xl md:text-5xl font-display font-bold tracking-tight text-on-surface mb-3 leading-tight">
+                            Siap berkreasi,<br /><span class="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Chef Abey!</span>
+                        </h2>
+                        <p class="text-base text-secondary mb-8 font-medium max-w-lg">
+                            Tantangan hari ini: Buat hidangan menggunakan <strong>rosemary</strong> dan <strong>bawang putih</strong>.
+                        </p>
+                        <a href="/chat" class="bg-gradient-to-r from-primary to-primary-container text-white px-8 py-4 rounded-2xl font-bold text-base inline-flex items-center gap-3 organic-shadow hover:shadow-lg hover:shadow-primary/30 active:scale-95 transition-all duration-300 w-max group/btn">
+                            Mulai Simulasi Baru
+                            <span class="material-symbols-outlined transform group-hover/btn:rotate-12 transition-transform" style="font-variation-settings: 'FILL' 1;">skillet</span>
+                        </a>
                     </div>
-                    <button onclick="showToast('Membuka manajemen pantry...', 'info')"
-                        class="mt-6 w-full py-3 border-2 border-outline-variant/30 rounded-xl text-primary font-bold hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 active:scale-95">
-                        Kelola Pantry
-                    </button>
+                    
+                    <!-- Decorative Image Right side -->
+                    <div class="absolute right-0 bottom-0 h-[120%] w-1/2 hidden md:block opacity-20 transform translate-x-1/4 translate-y-1/4 group-hover:scale-105 transition-transform duration-1000 pointer-events-none">
+                        <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover rounded-tl-[100px]" style="mask-image: linear-gradient(to left, black, transparent); -webkit-mask-image: linear-gradient(to left, black, transparent);" />
+                    </div>
                 </section>
 
-                <section
-                    class="lg:col-span-2 bg-wMulai Simulasi Baruite rounded-3xl p-6 md:p-8 organic-shadow border border-surface-variant/50">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-xl font-bold text-on-surface">Obrolan Terakhir</h3>
-                        <div class="p-2 bg-surface-container-low rounded-xl">
-                            <span class="material-symbols-outlined text-secondary">forum</span>
+                <!-- Profile/Stats Panel (Col 3) -->
+                <section class="lg:col-span-1 bg-surface-container-lowest rounded-3xl p-6 md:p-8 organic-shadow border border-surface-variant/50 relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-primary/10 to-transparent"></div>
+                    
+                    <div class="relative z-10 flex flex-col items-center">
+                        <div class="relative mb-4 group">
+                            <div class="absolute inset-0 bg-primary/20 rounded-full blur-md transform group-hover:scale-110 transition-transform"></div>
+                            <img alt="Chef Avatar" class="w-20 h-20 rounded-full object-cover border-4 border-white relative z-10 shadow-md" src="https://api.dicebear.com/7.x/avataaars/svg?seed=ChefJuna&backgroundColor=fbf9f0" />
                         </div>
-                    </div>
-                    <div class="space-y-3">
-
-                        <div onclick="showToast('Memuat obrolan Sourdough...', 'info')"
-                            class="group flex items-center justify-between p-4 rounded-2xl hover:bg-surface-container-low hover:shadow-md transition-all cursor-pointer border border-transparent hover:border-outline-variant/20">
-                            <div class="flex items-center gap-4">
-                                <div
-                                    class="w-12 h-12 bg-secondary-container rounded-full flex items-center justify-center text-on-secondary-container shadow-sm">
-                                    <span class="material-symbols-outlined">restaurant</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-on-surface group-hover:text-primary transition-colors">
-                                        Menyempurnakan Starter Sourdough</h4>
-                                    <p class="text-xs font-medium text-secondary mt-0.5">Aktif: 2 jam yang lalu</p>
-                                </div>
+                        
+                        <h3 class="text-xl font-bold text-on-surface mb-1">Chef Abey</h3>
+                        <p class="text-sm text-secondary font-medium mb-6">Culinary Enthusiast</p>
+                        
+                        <!-- Simple Stats Grid -->
+                        <div class="w-full grid grid-cols-2 gap-3 mt-2">
+                            <div class="flex flex-col items-center justify-center bg-surface-container-low py-4 rounded-2xl border border-surface-variant/50 hover:bg-surface-variant transition-colors">
+                                <span class="text-2xl font-bold text-primary mb-1">24</span>
+                                <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Resep Dibuat</span>
                             </div>
-                            <div
-                                class="w-10 h-10 rounded-full bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all shadow-sm">
-                                <span class="material-symbols-outlined text-primary">arrow_forward</span>
+                            <div class="flex flex-col items-center justify-center bg-surface-container-low py-4 rounded-2xl border border-surface-variant/50 hover:bg-surface-variant transition-colors">
+                                <span class="text-2xl font-bold text-primary mb-1">156</span>
+                                <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Disimpan</span>
                             </div>
                         </div>
-
-                        <div onclick="showToast('Memuat obrolan Pastry...', 'info')"
-                            class="group flex items-center justify-between p-4 rounded-2xl hover:bg-surface-container-low hover:shadow-md transition-all cursor-pointer border border-transparent hover:border-outline-variant/20">
-                            <div class="flex items-center gap-4">
-                                <div
-                                    class="w-12 h-12 bg-surface-variant rounded-full flex items-center justify-center text-secondary shadow-sm">
-                                    <span class="material-symbols-outlined">cake</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-on-surface group-hover:text-primary transition-colors">
-                                        Alternatif Pastry Bebas Gluten</h4>
-                                    <p class="text-xs font-medium text-secondary mt-0.5">Aktif: Kemarin</p>
-                                </div>
-                            </div>
-                            <div
-                                class="w-10 h-10 rounded-full bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all shadow-sm">
-                                <span class="material-symbols-outlined text-primary">arrow_forward</span>
-                            </div>
-                        </div>
-
+                        
+                        <a href="/settings" class="mt-6 w-full py-3 bg-transparent border border-outline-variant/30 text-on-surface-variant font-bold text-sm rounded-xl hover:bg-surface-container-low hover:text-on-surface transition-colors flex justify-center items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">edit</span> Edit Profil
+                        </a>
                     </div>
                 </section>
             </div>
 
-            <section class="pt-4">
-                <div class="flex items-center justify-between mb-8">
-                    <h3 class="text-2xl font-bold text-on-surface">Resep Unggulan</h3>
-                    <a class="text-primary font-bold hover:text-primary-container flex items-center gap-1 group bg-primary/10 px-4 py-2 rounded-full transition-colors"
-                        href="#">
-                        Lihat Semua <span
-                            class="material-symbols-outlined text-sm transform group-hover:translate-x-1 transition-transform">east</span>
+            <!-- Quick Actions Row -->
+            <section>
+                <h3 class="text-sm font-bold text-secondary uppercase tracking-widest mb-4 pl-2">Aksi Cepat</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <a href="/chat" class="bg-white p-4 rounded-2xl organic-shadow hover:-translate-y-1 hover:shadow-lg transition-all duration-300 border border-surface-variant/30 flex items-center gap-4 group">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors shrink-0">
+                            <span class="material-symbols-outlined text-[20px]">history</span>
+                        </div>
+                        <div class="text-left overflow-hidden">
+                            <p class="text-xs text-secondary font-medium truncate">Lanjutkan</p>
+                            <p class="text-sm font-bold text-on-surface truncate">Sourdough</p>
+                        </div>
+                    </a>
+                    
+                    <a href="/explore" class="bg-white p-4 rounded-2xl organic-shadow hover:-translate-y-1 hover:shadow-lg transition-all duration-300 border border-surface-variant/30 flex items-center gap-4 group">
+                        <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white transition-colors shrink-0">
+                            <span class="material-symbols-outlined text-[20px]">search</span>
+                        </div>
+                        <div class="text-left overflow-hidden">
+                            <p class="text-xs text-secondary font-medium truncate">Cari Inspirasi</p>
+                            <p class="text-sm font-bold text-on-surface truncate">Resep Baru</p>
+                        </div>
+                    </a>
+
+                    <a href="/pantry" class="bg-white p-4 rounded-2xl organic-shadow hover:-translate-y-1 hover:shadow-lg transition-all duration-300 border border-error/10 flex items-center gap-4 group">
+                        <div class="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center text-error group-hover:bg-error group-hover:text-white transition-colors shrink-0">
+                            <span class="material-symbols-outlined text-[20px]">kitchen</span>
+                        </div>
+                        <div class="text-left overflow-hidden">
+                            <p class="text-xs text-error font-medium truncate">Stok Menipis</p>
+                            <p class="text-sm font-bold text-on-surface truncate">Cek Pantry</p>
+                        </div>
+                    </a>
+
+                    <a href="/community" class="bg-white p-4 rounded-2xl organic-shadow hover:-translate-y-1 hover:shadow-lg transition-all duration-300 border border-surface-variant/30 flex items-center gap-4 group">
+                        <div class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
+                            <span class="material-symbols-outlined text-[20px]">forum</span>
+                        </div>
+                        <div class="text-left overflow-hidden">
+                            <p class="text-xs text-secondary font-medium truncate">Lagi Rame!</p>
+                            <p class="text-sm font-bold text-on-surface truncate">Komunitas</p>
+                        </div>
                     </a>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-
-                    <article
-                        class="group bg-white rounded-3xl overflow-hidden organic-shadow hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-surface-variant/50 relative">
-                        <div class="relative h-56 overflow-hidden">
-                            <img alt="Herb Roasted Chicken"
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                src="https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?q=80&w=600&auto=format&fit=crop" />
-
-                            <button onclick="toggleSave(this)"
-                                class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm p-2 rounded-full text-outline hover:text-error transition-colors shadow-sm z-10">
-                                <span class="material-symbols-outlined icon-save">favorite</span>
-                            </button>
-
-                            <div
-                                class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold text-primary flex items-center gap-1 shadow-sm">
-                                <span class="material-symbols-outlined text-[16px]">timer</span> 45m
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <div class="flex items-center gap-2 mb-4">
-                                <span
-                                    class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Menengah</span>
-                                <span
-                                    class="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Makan
-                                    Malam</span>
-                            </div>
-                            <h4
-                                class="text-xl font-bold text-on-surface mb-2 group-hover:text-primary transition-colors cursor-pointer">
-                                Ayam Panggang Lemon Bumbu</h4>
-                            <p class="text-sm text-secondary line-clamp-2 leading-relaxed">Aroma klasik dengan sentuhan
-                                rosemary segar, thyme, dan taburan kulit lemon yang cerah.</p>
-                        </div>
-                    </article>
-
-                    <article
-                        class="group bg-white rounded-3xl overflow-hidden organic-shadow hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-surface-variant/50 relative">
-                        <div class="relative h-56 overflow-hidden">
-                            <img alt="Mushroom Risotto"
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                src="https://images.unsplash.com/photo-1476124369491-e7addf5db378?q=80&w=600&auto=format&fit=crop" />
-
-                            <button onclick="toggleSave(this)"
-                                class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm p-2 rounded-full text-outline hover:text-error transition-colors shadow-sm z-10">
-                                <span class="material-symbols-outlined icon-save">favorite</span>
-                            </button>
-
-                            <div
-                                class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold text-primary flex items-center gap-1 shadow-sm">
-                                <span class="material-symbols-outlined text-[16px]">timer</span> 30m
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <div class="flex items-center gap-2 mb-4">
-                                <span
-                                    class="bg-[#f3dede] text-[#653c35] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Mahir</span>
-                                <span
-                                    class="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Vegetarian</span>
-                            </div>
-                            <h4
-                                class="text-xl font-bold text-on-surface mb-2 group-hover:text-primary transition-colors cursor-pointer">
-                                Risotto Jamur Liar Truffle</h4>
-                            <p class="text-sm text-secondary line-clamp-2 leading-relaxed">Nasi arborio yang creamy
-                                dimasak perlahan dengan kaldu porcini, diselesaikan dengan minyak truffle.</p>
-                        </div>
-                    </article>
-
-                    <article
-                        class="group bg-white rounded-3xl overflow-hidden organic-shadow hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-surface-variant/50 relative hidden lg:block">
-                        <div class="relative h-56 overflow-hidden">
-                            <img alt="Artisan Bread"
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                src="https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=600&auto=format&fit=crop" />
-
-                            <button onclick="toggleSave(this)"
-                                class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm p-2 rounded-full text-outline hover:text-error transition-colors shadow-sm z-10">
-                                <span class="material-symbols-outlined icon-save">favorite</span>
-                            </button>
-
-                            <div
-                                class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold text-primary flex items-center gap-1 shadow-sm">
-                                <span class="material-symbols-outlined text-[16px]">timer</span> 2j 15m
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <div class="flex items-center gap-2 mb-4">
-                                <span
-                                    class="bg-[#dcdad2] text-[#3e4a3e] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Pemula</span>
-                                <span
-                                    class="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Baking</span>
-                            </div>
-                            <h4
-                                class="text-xl font-bold text-on-surface mb-2 group-hover:text-primary transition-colors cursor-pointer">
-                                Sourdough Boule Klasik</h4>
-                            <p class="text-sm text-secondary line-clamp-2 leading-relaxed">Roti artisan dengan hidrasi
-                                tinggi dan kerak renyah, sempurna untuk pemula pembuat ragi liar.</p>
-                        </div>
-                    </article>
-
-                </div>
             </section>
+
+            <!-- Bento Grid Bottom Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+                
+                <!-- Trending Community (Col 1) -->
+                <section class="lg:col-span-1 bg-surface-container-lowest rounded-3xl p-6 organic-shadow border border-surface-variant/50 flex flex-col">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined text-secondary">trending_up</span> Trending
+                        </h3>
+                        <a href="/community" class="text-xs font-bold text-primary hover:underline">Lihat Forum</a>
+                    </div>
+                    
+                    <div class="space-y-4 flex-1">
+                        <div class="p-4 bg-surface-container-low rounded-2xl hover:bg-surface-variant transition-colors cursor-pointer border border-transparent hover:border-outline-variant/30">
+                            <div class="flex items-center gap-3 mb-2">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Renatta" class="w-6 h-6 rounded-full bg-white border border-surface-variant" />
+                                <span class="text-xs font-bold text-on-surface">Chef Renatta</span>
+                            </div>
+                            <p class="text-sm font-medium text-on-surface-variant line-clamp-2">Ada yang punya tips supaya kulit ayam panggang tetap crispy setelah 2 jam?</p>
+                            <div class="flex items-center gap-4 mt-3 text-xs text-secondary font-medium">
+                                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">favorite</span> 24</span>
+                                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">chat_bubble</span> 12 balasan</span>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-surface-container-low rounded-2xl hover:bg-surface-variant transition-colors cursor-pointer border border-transparent hover:border-outline-variant/30">
+                            <div class="flex items-center gap-3 mb-2">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Arnold" class="w-6 h-6 rounded-full bg-white border border-surface-variant" />
+                                <span class="text-xs font-bold text-on-surface">Chef Arnold</span>
+                            </div>
+                            <p class="text-sm font-medium text-on-surface-variant line-clamp-2">Resep rahasia kaldu jamur vegan yang umami-nya nendang banget!</p>
+                            <div class="flex items-center gap-4 mt-3 text-xs text-secondary font-medium">
+                                <span class="flex items-center gap-1 text-primary"><span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">favorite</span> 156</span>
+                                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">chat_bubble</span> 45 balasan</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Recommended Recipes Carousel (Col 2-3) -->
+                <section class="lg:col-span-2 bg-surface-container-lowest rounded-3xl p-6 md:p-8 organic-shadow border border-surface-variant/50 flex flex-col">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-xl font-bold text-on-surface">Spesial Untukmu</h3>
+                            <p class="text-sm text-secondary font-medium">Berdasarkan stok pantry dan level keahlianmu.</p>
+                        </div>
+                        <div class="flex gap-2 hidden sm:flex">
+                            <button class="w-8 h-8 rounded-full border border-surface-variant flex items-center justify-center hover:bg-surface-variant hover:text-primary transition-colors cursor-not-allowed opacity-50"><span class="material-symbols-outlined text-[18px]">chevron_left</span></button>
+                            <button class="w-8 h-8 rounded-full border border-surface-variant flex items-center justify-center hover:bg-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">chevron_right</span></button>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-6 overflow-x-auto pb-4 custom-scrollbar snap-x flex-1">
+                        <!-- Recipe 1 -->
+                        <article class="min-w-[280px] w-[280px] snap-center group bg-white rounded-3xl overflow-hidden border border-surface-variant/50 hover:shadow-xl transition-all duration-300 hover:border-primary/30 relative flex flex-col">
+                            <div class="relative h-40 overflow-hidden shrink-0">
+                                <img src="https://images.unsplash.com/photo-1611270629569-8b357cb88da9?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Pasta Carbonara" />
+                                <button onclick="toggleSave(this)" class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm p-1.5 rounded-full text-outline hover:text-error transition-colors z-10">
+                                    <span class="material-symbols-outlined icon-save text-[20px]">favorite</span>
+                                </button>
+                                <div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-bold text-primary flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">timer</span> 25m
+                                </div>
+                            </div>
+                            <div class="p-5 flex-1 flex flex-col justify-between">
+                                <div>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider text-secondary mb-1 block">Pasta Italia</span>
+                                    <h4 class="text-lg font-bold text-on-surface mb-2 leading-tight group-hover:text-primary transition-colors">
+                                        <a href="/recipe/pasta-carbonara" class="before:absolute before:inset-0">Pasta Carbonara Autentik</a>
+                                    </h4>
+                                </div>
+                                <div class="flex gap-1 mt-3">
+                                    <span class="w-2 h-2 rounded-full bg-primary"></span>
+                                    <span class="w-2 h-2 rounded-full bg-primary"></span>
+                                    <span class="w-2 h-2 rounded-full bg-surface-variant"></span>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Recipe 2 -->
+                        <article class="min-w-[280px] w-[280px] snap-center group bg-white rounded-3xl overflow-hidden border border-surface-variant/50 hover:shadow-xl transition-all duration-300 hover:border-primary/30 relative flex flex-col">
+                            <div class="relative h-40 overflow-hidden shrink-0">
+                                <img src="https://images.unsplash.com/photo-1485921325833-c519f76c4927?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Salmon" />
+                                <button onclick="toggleSave(this)" class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm p-1.5 rounded-full text-outline hover:text-error transition-colors z-10">
+                                    <span class="material-symbols-outlined icon-save text-[20px]">favorite</span>
+                                </button>
+                                <div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-bold text-primary flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">timer</span> 30m
+                                </div>
+                            </div>
+                            <div class="p-5 flex-1 flex flex-col justify-between">
+                                <div>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider text-secondary mb-1 block">Makan Malam</span>
+                                    <h4 class="text-lg font-bold text-on-surface mb-2 leading-tight group-hover:text-primary transition-colors">
+                                        <a href="/recipe/salmon-panggang" class="before:absolute before:inset-0">Salmon Panggang Lemon Asparagus</a>
+                                    </h4>
+                                </div>
+                                <div class="flex gap-1 mt-3">
+                                    <span class="w-2 h-2 rounded-full bg-primary"></span>
+                                    <span class="w-2 h-2 rounded-full bg-surface-variant"></span>
+                                    <span class="w-2 h-2 rounded-full bg-surface-variant"></span>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <!-- View More Card -->
+                        <article class="min-w-[140px] w-[140px] snap-center bg-surface-container-low rounded-3xl flex flex-col items-center justify-center border border-surface-variant/50 hover:bg-surface-variant transition-colors group">
+                            <a href="/explore" class="w-full h-full flex flex-col items-center justify-center gap-2 p-4">
+                                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-primary group-hover:scale-110 transition-transform organic-shadow">
+                                    <span class="material-symbols-outlined">east</span>
+                                </div>
+                                <span class="text-sm font-bold text-primary text-center">Lihat<br>Semua</span>
+                            </a>
+                        </article>
+                    </div>
+                </section>
+            </div>
+
         </main>
     </div>
 
     <script>
-        // 1. Mobile Sidebar Toggle
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebar-overlay');
-
             if (sidebar.classList.contains('-translate-x-full')) {
-                // Buka Sidebar
                 overlay.classList.remove('hidden');
-                // Gunakan requestAnimationFrame untuk memastikan display block di-render sebelum transisi opacity
                 requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        sidebar.classList.remove('-translate-x-full');
-                        overlay.classList.remove('opacity-0');
-                    });
+                    sidebar.classList.remove('-translate-x-full');
+                    overlay.classList.remove('opacity-0');
                 });
             } else {
-                // Tutup Sidebar
                 sidebar.classList.add('-translate-x-full');
                 overlay.classList.add('opacity-0');
                 setTimeout(() => overlay.classList.add('hidden'), 300);
@@ -654,6 +688,25 @@
             </div>
         </div>
     </div>
+        <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const forceStyle = document.getElementById('force-hover-style');
+            
+            if (sidebar) {
+                sidebar.addEventListener('mouseenter', () => {
+                    sessionStorage.setItem('sidebarHovered', 'true');
+                });
+                
+                sidebar.addEventListener('mouseleave', () => {
+                    sessionStorage.setItem('sidebarHovered', 'false');
+                    if (forceStyle) {
+                        forceStyle.remove();
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
