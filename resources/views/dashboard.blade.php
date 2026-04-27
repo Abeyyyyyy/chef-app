@@ -126,7 +126,7 @@
                 <a href="/settings" class="block">
                     <img alt="Chef logo"
                         class="w-16 h-16 md:w-10 md:h-10 group-hover/sidebar:w-16 group-hover/sidebar:h-16 rounded-full object-cover organic-shadow relative z-10 border-2 border-white transition-all duration-300"
-                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=ChefJuna&backgroundColor=fbf9f0" />
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ urlencode(auth()->user()->name) }}&backgroundColor=fbf9f0" />
                 </a>
             </div>
             <div class="text-center mt-3 opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300 whitespace-nowrap">
@@ -136,11 +136,11 @@
         </div>
 
         <div class="px-6 md:px-3 group-hover/sidebar:px-6 transition-all duration-300 w-full mt-6 shrink-0">
-            <button
+            <a href="/chat"
                 class="w-full bg-gradient-to-r from-primary to-primary-container text-white rounded-xl py-3 md:py-3 px-4 md:px-0 group-hover/sidebar:px-4 font-bold text-sm organic-shadow hover:shadow-lg hover:shadow-primary/30 active:scale-95 transition-all duration-200 flex justify-center items-center overflow-hidden">
                 <span class="material-symbols-outlined text-[20px] shrink-0">add_circle</span> 
                 <span class="whitespace-nowrap font-bold opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300 w-auto md:w-0 group-hover/sidebar:w-auto overflow-hidden pl-2">Create Recipe</span>
-            </button>
+            </a>
         </div>
 
         <nav class="flex-1 space-y-1.5 font-medium px-4 md:px-3 group-hover/sidebar:px-4 transition-all duration-300 mt-6 shrink-0">
@@ -283,7 +283,7 @@
                 </div>
                 <a href="/settings" class="hidden md:block">
                     <img alt="User Avatar" class="w-10 h-10 rounded-full object-cover border-2 border-surface-variant cursor-pointer hover:border-primary transition-colors"
-                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=ChefJuna&backgroundColor=fbf9f0" />
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ urlencode(auth()->user()->name) }}&backgroundColor=fbf9f0" />
                 </a>
             </div>
         </header>
@@ -305,7 +305,7 @@
                             </span>
                         </div>
                         <h2 class="text-3xl md:text-5xl font-display font-bold tracking-tight text-on-surface mb-3 leading-tight">
-                            Siap berkreasi,<br /><span class="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Chef Abey!</span>
+                            Siap berkreasi,<br /><span class="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">{{ auth()->user()->name }}!</span>
                         </h2>
                         <p class="text-base text-secondary mb-8 font-medium max-w-lg">
                             Tantangan hari ini: Buat hidangan menggunakan <strong>rosemary</strong> dan <strong>bawang putih</strong>.
@@ -332,7 +332,7 @@
                             <img alt="Chef Avatar" class="w-20 h-20 rounded-full object-cover border-4 border-white relative z-10 shadow-md" src="https://api.dicebear.com/7.x/avataaars/svg?seed=ChefJuna&backgroundColor=fbf9f0" />
                         </div>
                         
-                        <h3 class="text-xl font-bold text-on-surface mb-1">Chef Abey</h3>
+                        <h3 class="text-xl font-bold text-on-surface mb-1">{{ auth()->user()->name }}</h3>
                         <p class="text-sm text-secondary font-medium mb-6">Culinary Enthusiast</p>
                         
                         <!-- Simple Stats Grid -->

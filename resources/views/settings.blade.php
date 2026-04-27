@@ -85,7 +85,7 @@
                 <a href="/settings" class="block">
                     <img alt="Chef logo"
                         class="w-16 h-16 md:w-10 md:h-10 group-hover/sidebar:w-16 group-hover/sidebar:h-16 rounded-full object-cover organic-shadow relative z-10 border-2 border-white transition-all duration-300"
-                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=ChefJuna&backgroundColor=fbf9f0" />
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ urlencode(auth()->user()->name) }}&backgroundColor=fbf9f0" />
                 </a>
             </div>
             <div class="text-center mt-3 opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300 whitespace-nowrap">
@@ -95,11 +95,11 @@
         </div>
 
         <div class="px-6 md:px-3 group-hover/sidebar:px-6 transition-all duration-300 w-full mt-6 shrink-0">
-            <button
+            <a href="/chat"
                 class="w-full bg-gradient-to-r from-primary to-primary-container text-white rounded-xl py-3 md:py-3 px-4 md:px-0 group-hover/sidebar:px-4 font-bold text-sm organic-shadow hover:shadow-lg hover:shadow-primary/30 active:scale-95 transition-all duration-200 flex justify-center items-center overflow-hidden">
                 <span class="material-symbols-outlined text-[20px] shrink-0">add_circle</span> 
                 <span class="whitespace-nowrap font-bold opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300 w-auto md:w-0 group-hover/sidebar:w-auto overflow-hidden pl-2">Create Recipe</span>
-            </button>
+            </a>
         </div>
 
         <nav class="flex-1 space-y-1.5 font-medium px-4 md:px-3 group-hover/sidebar:px-4 transition-all duration-300 mt-6 shrink-0">
@@ -226,7 +226,7 @@
                     </div>
                 </div>
                 <a href="/settings">
-                    <img alt="User Avatar" class="w-9 h-9 rounded-full object-cover ml-2 border border-surface-variant" src="https://api.dicebear.com/7.x/avataaars/svg?seed=ChefJuna&backgroundColor=fbf9f0"/>
+                    <img alt="User Avatar" class="w-9 h-9 rounded-full object-cover ml-2 border border-surface-variant" src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ urlencode(auth()->user()->name) }}&backgroundColor=fbf9f0"/>
                 </a>
             </div>
         </nav>
@@ -249,27 +249,41 @@
                         <div class="flex flex-col md:flex-row gap-8 items-start">
                             <!-- Avatar Upload -->
                             <div class="relative inline-block group/avatar shrink-0">
-                                <img alt="Profile" class="w-24 h-24 rounded-full object-cover border-4 border-surface shadow-sm" src="https://api.dicebear.com/7.x/avataaars/svg?seed=ChefJuna&backgroundColor=fbf9f0"/>
+                                <img alt="Profile" class="w-24 h-24 rounded-full object-cover border-4 border-surface shadow-sm" src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ urlencode(auth()->user()->name) }}&backgroundColor=fbf9f0"/>
                                 <button aria-label="Edit Profile Picture" class="absolute bottom-0 right-0 bg-primary text-white rounded-full p-2 shadow-sm transform translate-y-1/4 translate-x-1/4 hover:scale-105 transition-transform">
                                     <span class="material-symbols-outlined text-sm">edit</span>
                                 </button>
                             </div>
                             <!-- Form Fields -->
-                            <div class="flex-1 space-y-5 w-full">
+                            <form method="POST" action="{{ route('profile.update') }}" class="flex-1 space-y-5 w-full">
+                                @csrf
+                                @method('patch')
+                                
                                 <div>
                                     <label class="block font-label text-sm font-bold mb-2 text-on-surface-variant uppercase tracking-wider" for="name">Chef Name</label>
-                                    <input class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/40 transition-shadow text-on-surface font-body" id="name" type="text" value="Chef Juna"/>
+                                    <input class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/40 transition-shadow text-on-surface font-body" id="name" name="name" type="text" value="{{ old('name', auth()->user()->name) }}" required/>
+                                    @error('name', 'updateProfileInformation')
+                                        <p class="text-error text-xs mt-1">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label class="block font-label text-sm font-bold mb-2 text-on-surface-variant uppercase tracking-wider" for="email">Email Address</label>
-                                    <input class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/40 transition-shadow text-on-surface font-body" id="email" type="email" value="juna@theatelier.com"/>
+                                    <input class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/40 transition-shadow text-on-surface font-body" id="email" name="email" type="email" value="{{ old('email', auth()->user()->email) }}" required/>
+                                    @error('email', 'updateProfileInformation')
+                                        <p class="text-error text-xs mt-1">{{ $message }}</p>
+                                    @enderror
                                 </div>
+                                
+                                @if (session('status') === 'profile-updated')
+                                    <p class="text-primary text-sm font-bold">Profile updated successfully!</p>
+                                @endif
+
                                 <div class="pt-2">
-                                    <button class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-container text-white font-bold text-sm shadow-sm hover:opacity-90 transition-opacity">
+                                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-container text-white font-bold text-sm shadow-sm hover:opacity-90 transition-opacity">
                                         Save Changes
                                     </button>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </section>
 
@@ -325,9 +339,12 @@
                             <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between p-4 bg-surface-container-low rounded-xl border border-surface-variant">
                                 <div>
                                     <p class="font-body font-bold text-on-surface">Password</p>
-                                    <p class="font-body text-sm text-on-surface-variant mt-1">Last changed 3 months ago</p>
+                                    <p class="font-body text-sm text-on-surface-variant mt-1">Last changed some time ago</p>
+                                    @if (session('status') === 'password-updated')
+                                        <p class="text-primary text-xs font-bold mt-1">Password updated successfully!</p>
+                                    @endif
                                 </div>
-                                <button class="px-5 py-2 rounded-xl border border-outline-variant/50 text-primary font-bold text-sm hover:bg-surface-container-highest transition-colors">
+                                <button onclick="openPasswordModal()" class="px-5 py-2 rounded-xl border border-outline-variant/50 text-primary font-bold text-sm hover:bg-surface-container-highest transition-colors">
                                     Update Password
                                 </button>
                             </div>
@@ -336,7 +353,7 @@
                                     <p class="font-body font-bold text-error">Close Kitchen (Delete Account)</p>
                                     <p class="font-body text-sm text-on-surface-variant mt-1">Permanently remove your recipes and data.</p>
                                 </div>
-                                <button class="px-5 py-2 rounded-xl text-error font-bold text-sm hover:bg-error/10 transition-colors">
+                                <button onclick="openDeleteModal()" class="px-5 py-2 rounded-xl text-error font-bold text-sm hover:bg-error/10 transition-colors">
                                     Delete Account
                                 </button>
                             </div>
@@ -430,6 +447,58 @@
                 }
             }
         });
+
+        // Password Modal Functions
+        function openPasswordModal() {
+            const modal = document.getElementById('password-modal');
+            const content = document.getElementById('password-modal-content');
+            modal.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            });
+        }
+
+        function closePasswordModal() {
+            const modal = document.getElementById('password-modal');
+            const content = document.getElementById('password-modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        // Delete Account Modal Functions
+        function openDeleteModal() {
+            const modal = document.getElementById('delete-modal');
+            const content = document.getElementById('delete-modal-content');
+            modal.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            });
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('delete-modal');
+            const content = document.getElementById('delete-modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        // Open modals if there are validation errors
+        window.addEventListener('DOMContentLoaded', () => {
+            @if($errors->updatePassword->any())
+                openPasswordModal();
+            @endif
+            @if($errors->userDeletion->any())
+                openDeleteModal();
+            @endif
+        });
     </script>
 
     <!-- Logout Modal Container -->
@@ -484,5 +553,62 @@
             }
         });
     </script>
+    <!-- Password Update Modal -->
+    <div id="password-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden opacity-0 transition-all duration-300 ease-in-out">
+        <div class="absolute inset-0 bg-surface/80 backdrop-blur-md" onclick="closePasswordModal()"></div>
+        <div class="bg-surface-container-lowest w-full max-w-md rounded-2xl shadow-ambient p-8 relative overflow-hidden transform scale-95 transition-transform duration-300 z-10" id="password-modal-content">
+            <h2 class="font-headline text-2xl font-bold text-primary mb-6 tracking-tight text-center">Update Password</h2>
+            <form method="POST" action="{{ route('password.update') }}" class="space-y-4">
+                @csrf
+                @method('put')
+                <div>
+                    <label class="block font-label text-xs font-bold mb-2 text-on-surface-variant uppercase" for="current_password">Current Password</label>
+                    <input class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/40 text-on-surface" id="current_password" name="current_password" type="password" required/>
+                    @error('current_password', 'updatePassword')
+                        <p class="text-error text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label class="block font-label text-xs font-bold mb-2 text-on-surface-variant uppercase" for="password">New Password</label>
+                    <input class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/40 text-on-surface" id="password" name="password" type="password" required/>
+                    @error('password', 'updatePassword')
+                        <p class="text-error text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label class="block font-label text-xs font-bold mb-2 text-on-surface-variant uppercase" for="password_confirmation">Confirm Password</label>
+                    <input class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/40 text-on-surface" id="password_confirmation" name="password_confirmation" type="password" required/>
+                </div>
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="closePasswordModal()" class="flex-1 py-3 rounded-lg border border-outline-variant/30 text-primary font-bold hover:bg-surface-container-low transition-colors">Cancel</button>
+                    <button type="submit" class="flex-1 py-3 rounded-lg bg-gradient-to-r from-primary to-primary-container text-white font-bold hover:opacity-90 transition-opacity">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div id="delete-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden opacity-0 transition-all duration-300 ease-in-out">
+        <div class="absolute inset-0 bg-surface/80 backdrop-blur-md" onclick="closeDeleteModal()"></div>
+        <div class="bg-surface-container-lowest w-full max-w-md rounded-2xl shadow-ambient p-8 relative overflow-hidden transform scale-95 transition-transform duration-300 z-10" id="delete-modal-content">
+            <h2 class="font-headline text-2xl font-bold text-error mb-4 tracking-tight text-center">Delete Account</h2>
+            <p class="text-on-surface-variant text-center mb-6">Are you sure you want to delete your account? This action cannot be undone.</p>
+            <form method="POST" action="{{ route('profile.destroy') }}" class="space-y-4">
+                @csrf
+                @method('delete')
+                <div>
+                    <label class="block font-label text-xs font-bold mb-2 text-on-surface-variant uppercase" for="delete_password">Password</label>
+                    <input class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-error/40 text-on-surface" id="delete_password" name="password" type="password" placeholder="Enter password to confirm" required/>
+                    @error('password', 'userDeletion')
+                        <p class="text-error text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="closeDeleteModal()" class="flex-1 py-3 rounded-lg border border-outline-variant/30 text-primary font-bold hover:bg-surface-container-low transition-colors">Cancel</button>
+                    <button type="submit" class="flex-1 py-3 rounded-lg bg-error text-white font-bold hover:opacity-90 transition-opacity">Delete Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

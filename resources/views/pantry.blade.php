@@ -92,7 +92,7 @@
                 <a href="/settings" class="block">
                     <img alt="Chef logo"
                         class="w-16 h-16 md:w-10 md:h-10 group-hover/sidebar:w-16 group-hover/sidebar:h-16 rounded-full object-cover organic-shadow relative z-10 border-2 border-white transition-all duration-300"
-                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=ChefJuna&backgroundColor=fbf9f0" />
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ urlencode(auth()->user()->name) }}&backgroundColor=fbf9f0" />
                 </a>
             </div>
             <div class="text-center mt-3 opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300 whitespace-nowrap">
@@ -102,11 +102,11 @@
         </div>
 
         <div class="px-6 md:px-3 group-hover/sidebar:px-6 transition-all duration-300 w-full mt-6 shrink-0">
-            <button
+            <a href="/chat"
                 class="w-full bg-gradient-to-r from-primary to-primary-container text-white rounded-xl py-3 md:py-3 px-4 md:px-0 group-hover/sidebar:px-4 font-bold text-sm organic-shadow hover:shadow-lg hover:shadow-primary/30 active:scale-95 transition-all duration-200 flex justify-center items-center overflow-hidden">
                 <span class="material-symbols-outlined text-[20px] shrink-0">add_circle</span> 
                 <span class="whitespace-nowrap font-bold opacity-100 md:opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300 w-auto md:w-0 group-hover/sidebar:w-auto overflow-hidden pl-2">Create Recipe</span>
-            </button>
+            </a>
         </div>
 
         <nav class="flex-1 space-y-1.5 font-medium px-4 md:px-3 group-hover/sidebar:px-4 transition-all duration-300 mt-6 shrink-0">
@@ -218,7 +218,7 @@
                     <span class="material-symbols-outlined icon-fill">favorite</span>
                 </button>
                 <a href="/settings">
-                    <img alt="User Avatar" class="w-9 h-9 rounded-full object-cover ml-2 border border-surface-variant cursor-pointer hover:border-primary transition-colors" src="https://api.dicebear.com/7.x/avataaars/svg?seed=ChefJuna&backgroundColor=fbf9f0"/>
+                    <img alt="User Avatar" class="w-9 h-9 rounded-full object-cover ml-2 border border-surface-variant cursor-pointer hover:border-primary transition-colors" src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ urlencode(auth()->user()->name) }}&backgroundColor=fbf9f0"/>
                 </a>
             </div>
         </nav>
@@ -230,6 +230,12 @@
                 <div class="flex-1 flex flex-col gap-8 pb-20">
                     <!-- Header & Search -->
                     <div class="flex flex-col gap-6">
+                        @if(session('success'))
+                            <div class="bg-primary/10 border border-primary/20 text-primary px-6 py-4 rounded-xl flex items-center gap-3 animate-pulse">
+                                <span class="material-symbols-outlined">check_circle</span>
+                                <span class="font-bold text-sm">{{ session('success') }}</span>
+                            </div>
+                        @endif
                         <div class="flex items-baseline justify-between mb-2">
                             <h2 class="text-3xl font-display font-bold text-on-surface tracking-tight">Dapur Saya</h2>
                             <span class="text-sm font-medium text-secondary">Inventory</span>
@@ -237,11 +243,17 @@
                         <div class="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
                             <!-- Chips -->
                             <div class="flex flex-wrap gap-3">
-                                <button class="px-5 py-2 rounded-xl bg-primary text-white text-sm font-bold shadow-sm transition-transform hover:-translate-y-0.5">Semua</button>
-                                <button class="px-5 py-2 rounded-xl bg-surface-container-lowest text-secondary border border-surface-variant text-sm font-medium hover:bg-surface-bright transition-colors shadow-sm">Protein</button>
-                                <button class="px-5 py-2 rounded-xl bg-surface-container-lowest text-secondary border border-surface-variant text-sm font-medium hover:bg-surface-bright transition-colors shadow-sm">Sayuran</button>
-                                <button class="px-5 py-2 rounded-xl bg-surface-container-lowest text-secondary border border-surface-variant text-sm font-medium hover:bg-surface-bright transition-colors shadow-sm">Bumbu</button>
-                                <button class="px-5 py-2 rounded-xl bg-surface-container-lowest text-secondary border border-surface-variant text-sm font-medium hover:bg-surface-bright transition-colors shadow-sm">Karbohidrat</button>
+                                @php
+                                    $currentCategory = request('category', 'Semua');
+                                    $categories = ['Semua', 'Protein', 'Sayuran', 'Bumbu', 'Karbohidrat'];
+                                @endphp
+
+                                @foreach($categories as $cat)
+                                    <a href="{{ route('pantry', ['category' => $cat]) }}" 
+                                       class="px-5 py-2 rounded-xl text-sm font-bold shadow-sm transition-all hover:-translate-y-0.5 {{ $currentCategory === $cat ? 'bg-primary text-white' : 'bg-surface-container-lowest text-secondary border border-surface-variant hover:bg-surface-bright' }}">
+                                        {{ $cat }}
+                                    </a>
+                                @endforeach
                             </div>
                             <!-- Mobile Search -->
                             <div class="relative w-full md:w-auto md:hidden">
@@ -253,91 +265,65 @@
 
                     <!-- Grid Layout -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Card 1 -->
-                        <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col gap-4 ambient-shadow hover:shadow-md hover:-translate-y-1 transition-all duration-300 group cursor-pointer border border-surface-variant/50">
-                            <div class="flex justify-between items-start">
-                                <div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
-                                    <span class="material-symbols-outlined text-3xl icon-fill" data-icon="egg">egg</span>
+                        @foreach($pantryItems as $item)
+                            <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col gap-4 ambient-shadow hover:shadow-md hover:-translate-y-1 transition-all duration-300 group cursor-pointer border border-surface-variant/50 relative overflow-hidden">
+                                @if($item->status === 'Menipis')
+                                    <div class="absolute top-0 left-0 w-full h-1.5 bg-error/80"></div>
+                                @endif
+                                <div class="flex justify-between items-start">
+                                    @php
+                                        $icon = 'inventory_2';
+                                        $colorClass = 'text-primary';
+                                        $bgColorClass = 'bg-surface-container-low';
+                                        
+                                        switch($item->category) {
+                                            case 'Protein':
+                                                $icon = 'set_meal';
+                                                $colorClass = 'text-secondary';
+                                                break;
+                                            case 'Sayuran':
+                                                $icon = 'eco';
+                                                $colorClass = 'text-primary';
+                                                break;
+                                            case 'Bumbu':
+                                                $icon = 'nutrition';
+                                                $colorClass = 'text-secondary';
+                                                break;
+                                            case 'Karbohidrat':
+                                                $icon = 'bakery_dining';
+                                                $colorClass = 'text-primary';
+                                                break;
+                                        }
+
+                                        if ($item->status === 'Menipis') {
+                                            $colorClass = 'text-error';
+                                            $bgColorClass = 'bg-error/5';
+                                        }
+                                    @endphp
+                                    <div class="w-14 h-14 rounded-full {{ $bgColorClass }} flex items-center justify-center {{ $colorClass }} group-hover:opacity-80 transition-colors">
+                                        <span class="material-symbols-outlined text-3xl icon-fill">{{ $icon }}</span>
+                                    </div>
+                                    @if($item->status === 'Menipis')
+                                        <span class="bg-error/10 text-error text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-sm">Stok Menipis</span>
+                                    @else
+                                        <button class="text-secondary/50 hover:text-secondary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
+                                    @endif
                                 </div>
-                                <button class="text-secondary/50 hover:text-secondary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
-                            </div>
-                            <div class="mt-2">
-                                <h3 class="text-lg font-bold text-on-surface">Telur Ayam</h3>
-                                <p class="text-sm font-bold text-secondary mt-1">12 Butir</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Card 2 (Low Stock) -->
-                        <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col gap-4 ambient-shadow hover:shadow-md hover:-translate-y-1 transition-all duration-300 group cursor-pointer border border-surface-variant/50 relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-full h-1.5 bg-error/80"></div>
-                            <div class="flex justify-between items-start">
-                                <div class="w-14 h-14 rounded-full bg-error/5 flex items-center justify-center text-error group-hover:bg-error/10 transition-colors">
-                                    <span class="material-symbols-outlined text-3xl icon-fill" data-icon="water_drop">water_drop</span>
+                                <div class="mt-2">
+                                    <h3 class="text-lg font-bold text-on-surface">{{ $item->name }}</h3>
+                                    <p class="text-sm font-bold {{ $item->status === 'Menipis' ? 'text-error' : 'text-secondary' }} mt-1">
+                                        {{ number_format($item->quantity, 1) }} {{ $item->unit }}
+                                    </p>
                                 </div>
-                                <span class="bg-error/10 text-error text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-sm">Stok Menipis</span>
                             </div>
-                            <div class="mt-2">
-                                <h3 class="text-lg font-bold text-on-surface">Susu Segar</h3>
-                                <p class="text-sm font-bold text-error mt-1">0.5 Liter</p>
+                        @endforeach
+
+                        @if($pantryItems->isEmpty())
+                            <div class="col-span-full py-20 flex flex-col items-center justify-center text-secondary/40">
+                                <span class="material-symbols-outlined text-6xl mb-4">inventory_2</span>
+                                <p class="text-lg font-medium">Dapur masih kosong. Ayo tambahkan bahan!</p>
                             </div>
-                        </div>
-                        
-                        <!-- Card 3 -->
-                        <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col gap-4 ambient-shadow hover:shadow-md hover:-translate-y-1 transition-all duration-300 group cursor-pointer border border-surface-variant/50">
-                            <div class="flex justify-between items-start">
-                                <div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center text-secondary group-hover:bg-secondary/10 transition-colors">
-                                    <span class="material-symbols-outlined text-3xl icon-fill" data-icon="nutrition">nutrition</span>
-                                </div>
-                                <button class="text-secondary/50 hover:text-secondary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
-                            </div>
-                            <div class="mt-2">
-                                <h3 class="text-lg font-bold text-on-surface">Bawang Putih</h3>
-                                <p class="text-sm font-bold text-secondary mt-1">20 Siung</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Card 4 -->
-                        <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col gap-4 ambient-shadow hover:shadow-md hover:-translate-y-1 transition-all duration-300 group cursor-pointer border border-surface-variant/50">
-                            <div class="flex justify-between items-start">
-                                <div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
-                                    <span class="material-symbols-outlined text-3xl icon-fill" data-icon="eco">eco</span>
-                                </div>
-                                <button class="text-secondary/50 hover:text-secondary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
-                            </div>
-                            <div class="mt-2">
-                                <h3 class="text-lg font-bold text-on-surface">Bayam</h3>
-                                <p class="text-sm font-bold text-secondary mt-1">2 Ikat</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Card 5 -->
-                        <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col gap-4 ambient-shadow hover:shadow-md hover:-translate-y-1 transition-all duration-300 group cursor-pointer border border-surface-variant/50">
-                            <div class="flex justify-between items-start">
-                                <div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center text-secondary group-hover:bg-secondary/10 transition-colors">
-                                    <span class="material-symbols-outlined text-3xl icon-fill" data-icon="set_meal">set_meal</span>
-                                </div>
-                                <button class="text-secondary/50 hover:text-secondary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
-                            </div>
-                            <div class="mt-2">
-                                <h3 class="text-lg font-bold text-on-surface">Dada Ayam</h3>
-                                <p class="text-sm font-bold text-secondary mt-1">1.5 kg</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Card 6 (Low Stock) -->
-                        <div class="bg-surface-container-lowest rounded-2xl p-6 flex flex-col gap-4 ambient-shadow hover:shadow-md hover:-translate-y-1 transition-all duration-300 group cursor-pointer border border-surface-variant/50 relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-full h-1.5 bg-error/80"></div>
-                            <div class="flex justify-between items-start">
-                                <div class="w-14 h-14 rounded-full bg-error/5 flex items-center justify-center text-error group-hover:bg-error/10 transition-colors">
-                                    <span class="material-symbols-outlined text-3xl icon-fill" data-icon="local_fire_department">local_fire_department</span>
-                                </div>
-                                <span class="bg-error/10 text-error text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-sm">Stok Menipis</span>
-                            </div>
-                            <div class="mt-2">
-                                <h3 class="text-lg font-bold text-on-surface">Cabai Merah</h3>
-                                <p class="text-sm font-bold text-error mt-1">50 gram</p>
-                            </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
 
@@ -350,19 +336,20 @@
                             </div>
                             <h3 class="text-xl font-headline font-bold text-on-surface tracking-tight">Quick Add</h3>
                         </div>
-                        <form class="flex flex-col gap-6">
+                        <form method="POST" action="{{ route('pantry.store') }}" class="flex flex-col gap-6">
+                            @csrf
                             <div class="flex flex-col gap-2.5">
                                 <label class="text-[11px] font-bold text-secondary uppercase tracking-widest">Ingredient Name</label>
-                                <input class="w-full bg-surface-container-high rounded-xl py-3.5 px-4 border-none focus:outline-none focus:ring-2 focus:ring-primary/40 focus:bg-surface transition-all text-on-surface font-medium placeholder:text-secondary/50" placeholder="e.g. Olive Oil" type="text"/>
+                                <input name="name" class="w-full bg-surface-container-high rounded-xl py-3.5 px-4 border-none focus:outline-none focus:ring-2 focus:ring-primary/40 focus:bg-surface transition-all text-on-surface font-medium placeholder:text-secondary/50" placeholder="e.g. Olive Oil" type="text" required/>
                             </div>
                             <div class="flex flex-col gap-2.5">
                                 <label class="text-[11px] font-bold text-secondary uppercase tracking-widest">Category</label>
                                 <div class="relative">
-                                    <select class="w-full bg-surface-container-high rounded-xl py-3.5 px-4 appearance-none border-none focus:outline-none focus:ring-2 focus:ring-primary/40 focus:bg-surface transition-all text-on-surface font-medium">
-                                        <option>Bumbu</option>
-                                        <option>Protein</option>
-                                        <option>Sayuran</option>
-                                        <option>Karbohidrat</option>
+                                    <select name="category" class="w-full bg-surface-container-high rounded-xl py-3.5 px-4 appearance-none border-none focus:outline-none focus:ring-2 focus:ring-primary/40 focus:bg-surface transition-all text-on-surface font-medium">
+                                        <option value="Bumbu">Bumbu</option>
+                                        <option value="Protein">Protein</option>
+                                        <option value="Sayuran">Sayuran</option>
+                                        <option value="Karbohidrat">Karbohidrat</option>
                                     </select>
                                     <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-secondary">expand_more</span>
                                 </div>
@@ -370,16 +357,16 @@
                             <div class="flex flex-col gap-2.5">
                                 <label class="text-[11px] font-bold text-secondary uppercase tracking-widest">Quantity</label>
                                 <div class="flex gap-3">
-                                    <input class="w-2/3 bg-surface-container-high rounded-xl py-3.5 px-4 border-none focus:outline-none focus:ring-2 focus:ring-primary/40 focus:bg-surface transition-all text-on-surface font-medium" placeholder="0" type="number"/>
-                                    <select class="w-1/3 bg-surface-container-high rounded-xl py-3.5 px-2 appearance-none border-none focus:outline-none focus:ring-2 focus:ring-primary/40 focus:bg-surface transition-all text-on-surface font-medium text-center">
-                                        <option>kg</option>
-                                        <option>gr</option>
-                                        <option>L</option>
-                                        <option>pcs</option>
+                                    <input name="quantity" class="w-2/3 bg-surface-container-high rounded-xl py-3.5 px-4 border-none focus:outline-none focus:ring-2 focus:ring-primary/40 focus:bg-surface transition-all text-on-surface font-medium" placeholder="0" type="number" step="0.01" required/>
+                                    <select name="unit" class="w-1/3 bg-surface-container-high rounded-xl py-3.5 px-2 appearance-none border-none focus:outline-none focus:ring-2 focus:ring-primary/40 focus:bg-surface transition-all text-on-surface font-medium text-center">
+                                        <option value="kg">kg</option>
+                                        <option value="gr">gr</option>
+                                        <option value="L">L</option>
+                                        <option value="pcs">pcs</option>
                                     </select>
                                 </div>
                             </div>
-                            <button class="mt-4 w-full bg-gradient-to-r from-primary to-primary-container text-white font-bold py-4 rounded-xl shadow-sm hover:shadow-md active:scale-95 transition-all flex items-center justify-center gap-2" type="button">
+                            <button type="submit" class="mt-4 w-full bg-gradient-to-r from-primary to-primary-container text-white font-bold py-4 rounded-xl shadow-sm hover:shadow-md active:scale-95 transition-all flex items-center justify-center gap-2">
                                 <span class="material-symbols-outlined text-sm font-bold">add</span> Add to Pantry
                             </button>
                         </form>

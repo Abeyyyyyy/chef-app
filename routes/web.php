@@ -162,17 +162,18 @@ Route::get('/history', function () {
 
 Route::get('/settings', function () {
     return view('settings');
-})->name('settings');
+})->middleware(['auth'])->name('settings');
 
 Route::get('/community', function () {
     return view('community');
 })->name('community');
 
-Route::get('/pantry', function () {
-    return view('pantry');
-})->name('pantry');
+Route::get('/pantry', [\App\Http\Controllers\PantryController::class, 'index'])->middleware(['auth'])->name('pantry');
+Route::post('/pantry', [\App\Http\Controllers\PantryController::class, 'store'])->middleware(['auth'])->name('pantry.store');
 
 
 Route::post('/generate-recipe', [RecipeController::class, 'generate'])->name('recipe.generate');
+
+
 
 require __DIR__.'/auth.php';
