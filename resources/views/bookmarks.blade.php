@@ -303,56 +303,31 @@
                     </h3>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Chat Item 1 -->
-                    <a class="block bg-surface-container-lowest p-6 rounded-3xl border border-surface-variant/60 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group" href="#">
-                        <div class="flex items-start gap-4">
-                            <div class="bg-primary/10 p-3 rounded-full text-primary shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
-                                <span class="material-symbols-outlined icon-fill">bookmark</span>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors leading-tight">Perfecting the Sourdough Starter</h4>
-                                <p class="text-sm text-on-surface-variant mb-4 leading-relaxed line-clamp-2">Discussion on feeding schedules, hydration ratios, and troubleshooting sluggish starters during winter months.</p>
-                                <div class="flex items-center gap-4 text-xs text-secondary font-bold">
-                                    <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">chat_bubble</span> 24 balasan</span>
-                                    <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">schedule</span> 2 hari yang lalu</span>
+                    @forelse($bookmarkedSessions as $session)
+                        <a class="block bg-surface-container-lowest p-6 rounded-3xl border border-surface-variant/60 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group" href="/chat?session={{ $session->id }}">
+                            <div class="flex items-start gap-4">
+                                <div class="bg-primary/10 p-3 rounded-full text-primary shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
+                                    <span class="material-symbols-outlined icon-fill">bookmark</span>
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <h4 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors leading-tight truncate">{{ $session->title }}</h4>
+                                    @if($session->latestMessage)
+                                        <p class="text-sm text-on-surface-variant mb-4 leading-relaxed line-clamp-2">{{ Str::limit($session->latestMessage->content, 120) }}</p>
+                                    @endif
+                                    <div class="flex items-center gap-4 text-xs text-secondary font-bold">
+                                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">chat_bubble</span> {{ $session->messages_count }} pesan</span>
+                                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">schedule</span> {{ $session->last_active_at->diffForHumans() }}</span>
+                                    </div>
                                 </div>
                             </div>
+                        </a>
+                    @empty
+                        <div class="col-span-full py-12 flex flex-col items-center justify-center text-on-surface-variant/50">
+                            <span class="material-symbols-outlined text-5xl mb-3">bookmark</span>
+                            <p class="text-base font-medium mb-1">Belum ada percakapan tersimpan</p>
+                            <p class="text-sm">Bookmark percakapan dengan AI dari halaman chat</p>
                         </div>
-                    </a>
-
-                    <!-- Chat Item 2 -->
-                    <a class="block bg-surface-container-lowest p-6 rounded-3xl border border-surface-variant/60 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group" href="#">
-                        <div class="flex items-start gap-4">
-                            <div class="bg-primary/10 p-3 rounded-full text-primary shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
-                                <span class="material-symbols-outlined icon-fill">bookmark</span>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors leading-tight">Gluten-Free Pastry Alternatives</h4>
-                                <p class="text-sm text-on-surface-variant mb-4 leading-relaxed line-clamp-2">Comparing different flour blends for achieving flaky crusts without gluten. Almond flour vs. Cassava.</p>
-                                <div class="flex items-center gap-4 text-xs text-secondary font-bold">
-                                    <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">chat_bubble</span> 18 balasan</span>
-                                    <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">schedule</span> 1 minggu yang lalu</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- Chat Item 3 -->
-                    <a class="block bg-surface-container-lowest p-6 rounded-3xl border border-surface-variant/60 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group" href="#">
-                        <div class="flex items-start gap-4">
-                            <div class="bg-primary/10 p-3 rounded-full text-primary shrink-0 group-hover:bg-primary group-hover:text-white transition-colors">
-                                <span class="material-symbols-outlined icon-fill">bookmark</span>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors leading-tight">Mastering Knife Skills: The Basics</h4>
-                                <p class="text-sm text-on-surface-variant mb-4 leading-relaxed line-clamp-2">A guide to the essential cuts every chef needs to know, from julienne to brunoise, and how to maintain your blade.</p>
-                                <div class="flex items-center gap-4 text-xs text-secondary font-bold">
-                                    <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">chat_bubble</span> 42 balasan</span>
-                                    <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">schedule</span> 3 minggu yang lalu</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
+                    @endforelse
                 </div>
             </section>
         </main>

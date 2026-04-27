@@ -18,9 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/chat', function () {
-    return view('chat');
-});
+Route::get('/chat', [\App\Http\Controllers\ChatController::class, 'index'])->middleware(['auth'])->name('chat');
 
 Route::get('/explore', function () {
     $recipes = [
@@ -152,13 +150,18 @@ Route::get('/recipe/{slug}', function ($slug) {
     return view('recipe', compact('recipe'));
 })->name('recipe.detail');
 
-Route::get('/bookmarks', function () {
-    return view('bookmarks');
-})->name('bookmarks');
+Route::get('/bookmarks', [\App\Http\Controllers\ChatController::class, 'bookmarks'])->middleware(['auth'])->name('bookmarks');
 
-Route::get('/history', function () {
-    return view('history');
-})->name('history');
+Route::get('/history', [\App\Http\Controllers\ChatController::class, 'history'])->middleware(['auth'])->name('history');
+
+// Chat API Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/api/pantry-items', [\App\Http\Controllers\ChatController::class, 'pantryItems']);
+    Route::post('/chat/session', [\App\Http\Controllers\ChatController::class, 'createSession']);
+    Route::post('/chat/message', [\App\Http\Controllers\ChatController::class, 'sendMessage']);
+    Route::post('/chat/session/{id}/bookmark', [\App\Http\Controllers\ChatController::class, 'toggleBookmark']);
+    Route::delete('/chat/session/{id}', [\App\Http\Controllers\ChatController::class, 'deleteSession']);
+});
 
 Route::get('/settings', function () {
     return view('settings');
