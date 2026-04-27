@@ -338,11 +338,11 @@
                         <!-- Simple Stats Grid -->
                         <div class="w-full grid grid-cols-2 gap-3 mt-2">
                             <div class="flex flex-col items-center justify-center bg-surface-container-low py-4 rounded-2xl border border-surface-variant/50 hover:bg-surface-variant transition-colors">
-                                <span class="text-2xl font-bold text-primary mb-1">24</span>
+                                <span class="text-2xl font-bold text-primary mb-1">{{ $recipesCreated }}</span>
                                 <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Resep Dibuat</span>
                             </div>
                             <div class="flex flex-col items-center justify-center bg-surface-container-low py-4 rounded-2xl border border-surface-variant/50 hover:bg-surface-variant transition-colors">
-                                <span class="text-2xl font-bold text-primary mb-1">156</span>
+                                <span class="text-2xl font-bold text-primary mb-1">{{ $savedRecipes }}</span>
                                 <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Disimpan</span>
                             </div>
                         </div>

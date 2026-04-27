@@ -9,7 +9,19 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $userId = auth()->id();
+    
+    // Hitung resep yang dibuat (jumlah pesan assistant yang memiliki recipe_data)
+    $recipesCreated = \App\Models\ChatMessage::whereHas('session', function($q) use ($userId) {
+        $q->where('user_id', $userId);
+    })->where('sender_role', 'assistant')->whereNotNull('recipe_data')->count();
+
+    // Hitung resep/sesi yang disimpan (bookmarked)
+    $savedRecipes = \App\Models\ChatSession::where('user_id', $userId)
+        ->where('is_bookmarked', true)
+        ->count();
+
+    return view('dashboard', compact('recipesCreated', 'savedRecipes'));
 })->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

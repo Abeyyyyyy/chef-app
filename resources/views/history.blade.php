@@ -184,26 +184,25 @@
                         <div class="space-y-4">
                             @foreach($sessions as $session)
                                 <a href="/chat?session={{ $session->id }}"
-                                   class="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 rounded-3xl bg-white hover:bg-surface-container-lowest shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer border border-surface-variant/60">
-                                    <div class="w-14 h-14 shrink-0 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
-                                        <span class="material-symbols-outlined icon-fill text-2xl">chat</span>
+                                   class="group flex items-center gap-4 p-4 md:p-5 rounded-3xl bg-white hover:bg-surface-container-lowest shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer border border-surface-variant/60">
+                                    <div class="w-12 h-12 md:w-14 md:h-14 shrink-0 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                                        <span class="material-symbols-outlined icon-fill text-xl md:text-2xl">chat</span>
                                     </div>
-                                    <div class="flex-1 flex flex-col justify-center min-w-0">
-                                        <h4 class="text-lg text-on-surface font-bold truncate tracking-tight group-hover:text-primary transition-colors">{{ $session->title }}</h4>
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="text-base md:text-lg text-on-surface font-bold truncate tracking-tight group-hover:text-primary transition-colors">{{ $session->title }}</h4>
                                         @if($session->latestMessage)
-                                            <p class="text-sm text-on-surface-variant mt-1 line-clamp-1">
-                                                {{ $session->latestMessage->sender_role === 'assistant' ? 'AI: ' : '' }}{{ Str::limit($session->latestMessage->content, 80) }}
+                                            <p class="text-xs md:text-sm text-on-surface-variant mt-0.5 line-clamp-1 opacity-80">
+                                                {{ $session->latestMessage->sender_role === 'assistant' ? 'Chef: ' : 'Anda: ' }}{{ Str::limit($session->latestMessage->content, 60) }}
                                             </p>
                                         @endif
                                     </div>
-                                    <div class="flex items-center gap-3 sm:flex-col sm:items-end w-full sm:w-auto mt-2 sm:mt-0 justify-between sm:justify-center shrink-0">
+                                    <div class="flex flex-col items-end gap-1 shrink-0">
+                                        <span class="text-[10px] md:text-xs text-on-surface-variant font-bold opacity-60">{{ $session->last_active_at->format('H:i') }}</span>
                                         @if($session->is_bookmarked)
-                                            <span class="inline-flex items-center px-3 py-1.5 rounded-full bg-primary/10 text-primary text-[11px] font-bold uppercase tracking-widest border border-primary/20">
-                                                <span class="material-symbols-outlined text-[14px] mr-1 icon-fill">bookmark</span>
-                                                Tersimpan
+                                            <span class="text-primary">
+                                                <span class="material-symbols-outlined text-[18px] md:text-[20px] icon-fill">bookmark</span>
                                             </span>
                                         @endif
-                                        <span class="text-sm text-on-surface-variant font-medium">{{ $session->last_active_at->format('H:i') }}</span>
                                     </div>
                                 </a>
                             @endforeach

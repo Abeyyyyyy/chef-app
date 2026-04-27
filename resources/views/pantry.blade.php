@@ -225,7 +225,7 @@
 
         <!-- Main Content Canvas -->
         <main class="flex-1 overflow-y-auto w-full px-6 py-8 custom-scrollbar">
-            <div class="max-w-7xl mx-auto flex flex-col xl:flex-row gap-12">
+            <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12">
                 <!-- Left Side: Pantry Content -->
                 <div class="flex-1 flex flex-col gap-8 pb-20">
                     <!-- Header & Search -->

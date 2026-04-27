@@ -347,69 +347,63 @@
                 </div>
             `).join('');
 
-            const imageKeyword = recipe.image_keyword || recipe.title || 'food,cooking';
-            const imageUrl = `https://source.unsplash.com/800x450/?${encodeURIComponent(imageKeyword)}`;
+            const imageKeyword = recipe.image_keyword || recipe.title || 'gourmet food';
+            const imageUrl = `https://source.unsplash.com/1200x800/?${encodeURIComponent(imageKeyword)}&sig=${Math.random()}`;
 
             chatCanvas.insertAdjacentHTML('beforeend', `
                 <div class="flex gap-3 items-start msg-animate">
                     <div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shrink-0">
                         <span class="material-symbols-outlined text-[18px]">restaurant</span>
                     </div>
-                    <div class="bg-white rounded-[2rem] shadow-xl border border-surface-variant/50 overflow-hidden max-w-[95%] md:max-w-[85%] lg:max-w-[70%]">
+                    <div class="bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-xl border border-surface-variant/50 overflow-hidden max-w-[98%] md:max-w-[85%] lg:max-w-[70%]">
                         <!-- Header Image -->
-                        <div class="relative h-48 md:h-64 w-full bg-surface-variant">
-                            <img src="${imageUrl}" alt="${escapeHtml(recipe.title)}" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80'">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                            <div class="absolute bottom-0 left-0 p-6">
-                                <h3 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight drop-shadow-md">${escapeHtml(recipe.title || '')}</h3>
+                        <div class="relative h-48 md:h-72 w-full bg-surface-variant">
+                            <img src="${imageUrl}" alt="${escapeHtml(recipe.title)}" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&q=80'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-4 md:p-6">
+                                <h3 class="text-xl md:text-3xl font-extrabold text-white tracking-tight drop-shadow-md line-clamp-2">${escapeHtml(recipe.title || '')}</h3>
                             </div>
                         </div>
 
                         <!-- Quick Info Bar -->
-                        <div class="flex items-center justify-between px-6 py-4 bg-primary/5 border-b border-surface-variant/50 overflow-x-auto hide-scrollbar gap-4">
-                            <div class="flex items-center gap-2 shrink-0">
-                                <span class="material-symbols-outlined text-primary text-[20px]">schedule</span>
-                                <div class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Waktu<br><span class="text-primary text-sm">${escapeHtml(recipe.waktu || '-')}</span></div>
+                        <div class="grid grid-cols-3 gap-1 px-2 md:px-6 py-3 bg-primary/5 border-b border-surface-variant/50">
+                            <div class="flex items-center gap-1.5 md:gap-2 justify-center">
+                                <span class="material-symbols-outlined text-primary text-[18px] md:text-[20px]">schedule</span>
+                                <div class="text-[9px] md:text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Waktu<br><span class="text-primary text-xs md:text-sm">${escapeHtml(recipe.waktu || '-')}</span></div>
                             </div>
-                            <div class="flex items-center gap-2 shrink-0">
-                                <span class="material-symbols-outlined text-primary text-[20px]">group</span>
-                                <div class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Porsi<br><span class="text-primary text-sm">${escapeHtml(recipe.porsi || '-')}</span></div>
+                            <div class="flex items-center gap-1.5 md:gap-2 justify-center border-x border-surface-variant/30">
+                                <span class="material-symbols-outlined text-primary text-[18px] md:text-[20px]">group</span>
+                                <div class="text-[9px] md:text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Porsi<br><span class="text-primary text-xs md:text-sm">${escapeHtml(recipe.porsi || '-')}</span></div>
                             </div>
-                            <div class="flex items-center gap-2 shrink-0">
-                                <span class="material-symbols-outlined text-primary text-[20px]">equalizer</span>
-                                <div class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Level<br><span class="text-primary text-sm">${escapeHtml(recipe.level || '-')}</span></div>
+                            <div class="flex items-center gap-1.5 md:gap-2 justify-center">
+                                <span class="material-symbols-outlined text-primary text-[18px] md:text-[20px]">equalizer</span>
+                                <div class="text-[9px] md:text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Level<br><span class="text-primary text-xs md:text-sm">${escapeHtml(recipe.level || '-')}</span></div>
                             </div>
                         </div>
 
-                        <div class="p-6 md:p-8 space-y-8">
+                        <div class="p-5 md:p-8 space-y-6 md:space-y-8">
                             <!-- Description -->
-                            @if(isset($recipe->description))
-                                <p class="text-on-surface-variant italic leading-relaxed text-sm bg-surface-container-low p-4 rounded-xl border-l-4 border-primary">
-                                    "${escapeHtml(recipe.description)}"
-                                </p>
-                            @else
-                                <p class="text-on-surface-variant italic leading-relaxed text-sm bg-surface-container-low p-4 rounded-xl border-l-4 border-primary">
-                                    "${escapeHtml(recipe.description || 'Resep spesial yang disiapkan khusus untuk Anda oleh Chef Atelier.')}"
-                                </p>
-                            @endif
+                            <p class="text-on-surface-variant italic leading-relaxed text-xs md:text-sm bg-surface-container-low p-4 rounded-xl border-l-4 border-primary">
+                                "${escapeHtml(recipe.description || 'Resep spesial yang disiapkan khusus untuk Anda.')}"
+                            </p>
 
-                            <div class="grid md:grid-cols-2 gap-8">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                                 <!-- Ingredients -->
                                 <div>
-                                    <h4 class="font-bold text-secondary mb-4 flex items-center gap-2 text-lg uppercase tracking-tight">
-                                        <span class="material-symbols-outlined bg-secondary/10 p-2 rounded-lg text-[20px]">kitchen</span>
+                                    <h4 class="font-bold text-secondary mb-3 md:mb-4 flex items-center gap-2 text-base md:text-lg uppercase tracking-tight">
+                                        <span class="material-symbols-outlined bg-secondary/10 p-2 rounded-lg text-[18px] md:text-[20px]">kitchen</span>
                                         Bahan-bahan
                                     </h4>
-                                    <ul class="space-y-1">${ingredientsList}</ul>
+                                    <ul class="space-y-1 text-xs md:text-sm">${ingredientsList}</ul>
                                 </div>
 
                                 <!-- Steps -->
                                 <div>
-                                    <h4 class="font-bold text-secondary mb-4 flex items-center gap-2 text-lg uppercase tracking-tight">
-                                        <span class="material-symbols-outlined bg-secondary/10 p-2 rounded-lg text-[20px]">outdoor_grill</span>
-                                        Langkah Memasak
+                                    <h4 class="font-bold text-secondary mb-3 md:mb-4 flex items-center gap-2 text-base md:text-lg uppercase tracking-tight">
+                                        <span class="material-symbols-outlined bg-secondary/10 p-2 rounded-lg text-[18px] md:text-[20px]">outdoor_grill</span>
+                                        Langkah
                                     </h4>
-                                    <div class="space-y-2">${stepsList}</div>
+                                    <div class="space-y-1 text-xs md:text-sm">${stepsList}</div>
                                 </div>
                             </div>
                         </div>
