@@ -120,8 +120,17 @@
                                     <div class="flex-1 min-w-0">
                                         <h4 class="text-base md:text-lg text-on-surface font-bold truncate tracking-tight group-hover:text-primary transition-colors">{{ $session->title }}</h4>
                                         @if($session->latestMessage)
+                                            @php
+                                                $previewContent = $session->latestMessage->content;
+                                                if ($session->latestMessage->sender_role === 'assistant' && !empty($session->latestMessage->recipe_data)) {
+                                                    $rData = is_string($session->latestMessage->recipe_data) ? json_decode($session->latestMessage->recipe_data, true) : $session->latestMessage->recipe_data;
+                                                    if (isset($rData['description'])) {
+                                                        $previewContent = $rData['description'];
+                                                    }
+                                                }
+                                            @endphp
                                             <p class="text-xs md:text-sm text-on-surface-variant mt-0.5 line-clamp-1 opacity-80">
-                                                {{ $session->latestMessage->sender_role === 'assistant' ? 'Chef: ' : 'Anda: ' }}{{ Str::limit($session->latestMessage->content, 60) }}
+                                                {{ $session->latestMessage->sender_role === 'assistant' ? 'Chef: ' : 'Anda: ' }}{{ Str::limit($previewContent, 60) }}
                                             </p>
                                         @endif
                                     </div>

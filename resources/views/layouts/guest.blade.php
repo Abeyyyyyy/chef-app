@@ -55,6 +55,12 @@
                 <div class="absolute -top-32 -right-32 w-96 h-96 bg-brand-green/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
                 <div class="absolute top-1/2 -left-32 w-80 h-80 bg-secondary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
 
+                <!-- Floating Back Button -->
+                <a href="/" class="absolute top-6 right-6 md:top-8 md:right-8 z-50 flex items-center gap-2 px-5 py-2.5 bg-white/90 backdrop-blur-sm rounded-full shadow-lg shadow-primary/10 border border-surface-variant/50 text-primary hover:text-white hover:bg-primary transition-all duration-300 hover:-translate-y-1 group" title="Kembali ke Beranda">
+                    <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    <span class="font-bold text-sm">Kembali</span>
+                </a>
+
                 <div class="mx-auto w-full max-w-md relative z-10 animate-fade-up">
                     <!-- Mobile Logo -->
                     <div class="lg:hidden mb-10 flex justify-center">

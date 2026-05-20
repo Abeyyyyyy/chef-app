@@ -220,7 +220,16 @@
                                     </button>
                                     <h4 class="text-lg font-bold text-on-surface mb-2 group-hover:text-primary transition-colors leading-tight truncate pr-8">{{ $session->title }}</h4>
                                     @if($session->latestMessage)
-                                        <p class="text-sm text-on-surface-variant mb-4 leading-relaxed line-clamp-2">{{ Str::limit($session->latestMessage->content, 120) }}</p>
+                                        @php
+                                            $previewContent = $session->latestMessage->content;
+                                            if ($session->latestMessage->sender_role === 'assistant' && !empty($session->latestMessage->recipe_data)) {
+                                                $rData = is_string($session->latestMessage->recipe_data) ? json_decode($session->latestMessage->recipe_data, true) : $session->latestMessage->recipe_data;
+                                                if (isset($rData['description'])) {
+                                                    $previewContent = $rData['description'];
+                                                }
+                                            }
+                                        @endphp
+                                        <p class="text-sm text-on-surface-variant mb-4 leading-relaxed line-clamp-2">{{ Str::limit($previewContent, 120) }}</p>
                                     @endif
                                     <div class="flex items-center gap-4 text-xs text-secondary font-bold">
                                         <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">chat_bubble</span> {{ $session->messages_count }} pesan</span>
